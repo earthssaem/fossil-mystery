@@ -374,6 +374,134 @@ button{font-family:inherit;cursor:pointer;border:none;}
 }
 .help-fab:active{transform:translateY(2px);}
 
+/* ============================================================
+   [ 2단계 ] 신뢰도 게이지 · 돋보기 · 관찰 · 확인 도장
+   ============================================================ */
+
+/* ---------- 감정 신뢰도(信賴度) 게이지 ---------- */
+.trust{
+  position:relative;
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;
+  padding:9px 12px 11px;margin-bottom:14px;box-shadow:0 3px 8px var(--shadow);
+}
+.trust-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:8px;}
+.trust-name{font-size:.82rem;font-weight:700;color:var(--ink-soft);}
+.trust-name b{font-family:'Gowun Batang',serif;color:var(--ink);margin-left:2px;}
+.trust-status{font-family:'Nanum Pen Script',cursive;font-size:1.2rem;white-space:nowrap;}
+.trust.t-high .trust-status{color:var(--good);}
+.trust.t-mid  .trust-status{color:var(--gold);}
+.trust.t-low  .trust-status{color:var(--bad);}
+.trust-track{
+  position:relative;height:16px;border-radius:9px;overflow:hidden;
+  background:var(--paper-dark);border:1px solid var(--line);
+}
+.trust-track > i{
+  display:block;height:100%;width:100%;border-radius:9px;
+  transition:width .5s cubic-bezier(.3,1,.4,1), background .4s;
+}
+.trust.t-high .trust-track > i{background:linear-gradient(90deg,#3f7d52,#5aa06d);}
+.trust.t-mid  .trust-track > i{background:linear-gradient(90deg,#a9852f,#c9a944);}
+.trust.t-low  .trust-track > i{background:linear-gradient(90deg,#8f251d,#c14a3f);}
+.trust-val{
+  position:absolute;top:50%;right:8px;transform:translateY(-50%);
+  font-size:.72rem;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35);
+}
+/* 변동 시 떠오르는 숫자 */
+.trust-flash{
+  position:absolute;top:6px;right:14px;font-family:'Nanum Pen Script',cursive;
+  font-size:1.8rem;font-weight:700;pointer-events:none;
+  animation:trustpop 1.1s ease-out forwards;
+}
+.trust-flash.up{color:var(--good);}
+.trust-flash.down{color:var(--bad);}
+@keyframes trustpop{
+  0%{opacity:0;transform:translateY(6px) scale(.8);}
+  25%{opacity:1;transform:translateY(-4px) scale(1.1);}
+  100%{opacity:0;transform:translateY(-26px) scale(1);}
+}
+/* 신뢰도 0 경고 배너 (게임은 계속됨) */
+.trust-warn{
+  margin:-4px 0 14px;padding:10px 12px;border-radius:8px;
+  background:rgba(182,54,44,.1);border:1px dashed var(--bad);
+  font-size:.9rem;color:var(--stamp-deep);font-weight:500;
+}
+.trust-warn b{font-family:'Nanum Pen Script',cursive;font-size:1.1rem;}
+
+/* ---------- 서류 도구 (돋보기 / 관찰) ---------- */
+.doc-tools{display:flex;gap:8px;margin:2px 0 10px;flex-wrap:wrap;}
+.tool-btn{
+  flex:1;min-width:130px;padding:9px 12px;border-radius:8px;
+  border:2px solid var(--ink-soft);background:var(--paper);color:var(--ink-soft);
+  font-weight:700;font-size:.88rem;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  transition:background .15s,color .15s,border-color .15s,transform .06s;
+}
+.tool-btn:active{transform:translateY(1px);}
+.tool-btn.on{background:var(--gold);color:#fff8ee;border-color:var(--gold);}
+
+/* 돋보기 모드 필드 강조 */
+.field{position:relative;}
+.fields.mag .field{cursor:zoom-in;transition:transform .15s,box-shadow .15s,background .15s;}
+.fields.mag .field:hover,
+.fields.mag .field.peek{
+  transform:scale(1.035);background:rgba(169,133,47,.14);
+  box-shadow:0 5px 16px var(--shadow);border-radius:8px;z-index:2;
+}
+.fields.mag .field.key .v{filter:blur(1.3px);opacity:.72;transition:filter .25s,opacity .25s;}
+.fields.mag .field.key:hover .v,
+.fields.mag .field.key.peek .v,
+.fields.mag .field.key.inspected .v{filter:none;opacity:1;}
+.fields.mag .field.inspected::after{
+  content:'🔍 조사됨';position:absolute;top:3px;right:6px;
+  font-size:.64rem;font-weight:700;color:var(--good);
+  background:rgba(63,125,82,.14);padding:1px 7px;border-radius:10px;
+}
+.mag-hint{font-size:.82rem;color:var(--ink-soft);margin:0 0 8px;font-style:italic;}
+
+/* ---------- 확인 도장 모달 ---------- */
+.confirm-modal{max-width:420px;text-align:center;}
+.confirm-modal .seal-mini{
+  font-size:2.4rem;width:66px;height:66px;margin:0 auto 6px;
+  display:flex;align-items:center;justify-content:center;
+  border:4px double var(--stamp);border-radius:50%;color:var(--stamp);
+  background:rgba(182,54,44,.08);
+}
+.confirm-modal h2{justify-content:center;font-size:1.35rem;}
+.confirm-modal p{font-size:.95rem;margin:8px 0 0;}
+.confirm-summary{
+  text-align:left;background:var(--paper-2);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px;margin:14px 0 4px;font-size:.95rem;line-height:1.7;
+}
+.confirm-summary .cs-k{
+  display:inline-block;min-width:44px;font-weight:700;color:var(--ink-soft);font-size:.85rem;
+}
+.confirm-summary .cs-real{color:#27496d;}
+.confirm-summary .cs-fake{color:var(--stamp);}
+
+/* ---------- 화석 관찰 뷰 ---------- */
+.obs-modal{max-width:460px;}
+.obs-modal h2{font-size:1.35rem;}
+.obs-stage{
+  margin:12px 0;height:280px;max-height:52vh;
+  border-radius:12px;border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 50% 40%, #fbf3df 0, #e7d5ae 100%);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  cursor:grab;touch-action:none;position:relative;
+}
+.obs-stage.grabbing{cursor:grabbing;}
+.obs-stage::after{
+  content:'⟲ 드래그해서 돌려보기';position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  font-size:.74rem;color:var(--ink-soft);background:rgba(244,234,213,.7);
+  padding:2px 10px;border-radius:10px;pointer-events:none;
+}
+.obs-art{
+  width:64%;max-width:230px;transition:transform .12s ease-out;
+  will-change:transform;filter:drop-shadow(0 4px 8px rgba(60,44,22,.2));
+}
+.obs-art svg{display:block;width:100%;height:auto;}
+.obs-ctrl{display:flex;gap:10px;margin-bottom:10px;}
+.obs-ctrl .btn{flex:1;}
+
 /* ---------- 결과 리포트 ---------- */
 .result-hero{text-align:center;padding:10px 0 4px;}
 .result-hero .grade{
@@ -468,6 +596,34 @@ button{font-family:inherit;cursor:pointer;border:none;}
   </div>
 </div>
 
+<!-- 확인 도장 모달 (되돌릴 수 없는 감정) -->
+<div class="modal-back" id="confirmModal" onclick="if(event.target===this)closeConfirm()">
+  <div class="modal confirm-modal">
+    <div class="seal-mini">🔨</div>
+    <h2>감정을 확정하시겠습니까?</h2>
+    <p>도장은 <b>되돌릴 수 없습니다.</b><br>확정 후에는 이 표본의 판정을 바꿀 수 없습니다.</p>
+    <div class="confirm-summary" id="confirmSummary"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="closeConfirm()">🔍 다시 볼게요</button>
+      <button class="btn primary" onclick="doConfirm()">🔨 확정</button>
+    </div>
+  </div>
+</div>
+
+<!-- 화석 관찰 모달 -->
+<div class="modal-back" id="obsModal" onclick="if(event.target===this)closeObserve()">
+  <div class="modal obs-modal">
+    <h2 id="obsTitle">🔬 화석 관찰</h2>
+    <p class="muted" style="font-size:.88rem;margin:2px 0 0">드래그해 돌려보고, 확대해 표본을 살펴보세요. (감정 필수는 아닙니다)</p>
+    <div class="obs-stage" id="obsStage"><div class="obs-art" id="obsArt"></div></div>
+    <div class="obs-ctrl">
+      <button class="btn ghost" onclick="obsZoomCycle()">🔍 확대/축소</button>
+      <button class="btn ghost" onclick="obsReset()">↺ 초기화</button>
+    </div>
+    <button class="btn primary" onclick="closeObserve()">닫기</button>
+  </div>
+</div>
+
 <!-- 도장/인장 연출 레이어 -->
 <div class="stamp-fx" id="stampFx" style="display:none">
   <div class="seal real" id="stampMark">
@@ -498,6 +654,42 @@ const ICONS = {
 // 감정 서류 항목 라벨에 붙는 한 줄 설명(툴팁). 라벨명으로 조회.
 const FIELD_HINTS = {
   '퇴적 당시 환경': '이 지층이 퇴적될 당시(=화석 속 생물이 살던 시기)의 환경'
+};
+
+// 돋보기로 '조사'할 핵심 항목(라벨). 판매자 주장(claim)은 별도로 처리.
+const KEY_FIELDS = ['같은 지층에서 발견된 화석', '퇴적 당시 환경', '발굴 지층', '발굴 장소'];
+
+// 화석 관찰용 라인아트 (인라인 SVG 실루엣 · 외부 이미지 없음)
+const FOSSIL_ART = {
+  trilobite:`<svg viewBox="0 0 120 120"><g fill="none" stroke="#3b2f22" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M60 12 C40 12 34 30 34 60 C34 92 46 108 60 108 C74 108 86 92 86 60 C86 30 80 12 60 12 Z"/>
+    <path d="M47 24 C40 42 40 80 49 102"/><path d="M73 24 C80 42 80 80 71 102"/>
+    <line x1="60" y1="16" x2="60" y2="104"/><path d="M40 30 Q60 22 80 30"/>
+    <path d="M48 44 H72"/><path d="M47 56 H73"/><path d="M47 68 H73"/><path d="M48 80 H72"/><path d="M50 92 H70"/></g></svg>`,
+  fusulinid:`<svg viewBox="0 0 120 120"><g fill="none" stroke="#3b2f22" stroke-width="2.4" stroke-linecap="round">
+    <path d="M18 60 Q60 22 102 60 Q60 98 18 60 Z"/><line x1="60" y1="28" x2="60" y2="92"/>
+    <path d="M40 36 Q46 60 40 84"/><path d="M51 30 Q55 60 51 90"/>
+    <path d="M69 30 Q65 60 69 90"/><path d="M80 36 Q74 60 80 84"/></g></svg>`,
+  ammonite:`<svg viewBox="0 0 120 120"><g fill="none" stroke="#3b2f22" stroke-width="2.4" stroke-linecap="round">
+    <path d="M62 58 C62 51 71 51 71 61 C71 74 53 74 53 58 C53 40 79 40 79 62 C79 88 45 88 45 58 C45 28 91 28 91 62"/>
+    <path d="M60 30 L60 20"/><path d="M40 44 L32 38"/><path d="M40 76 L32 84"/><path d="M84 50 L92 44"/><path d="M82 78 L90 86"/></g></svg>`,
+  dino:`<svg viewBox="0 0 120 120"><g fill="none" stroke="#3b2f22" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M12 42 C22 36 30 44 40 46 C52 48 58 58 72 60 C88 62 96 52 106 58 C112 62 110 74 101 74 C97 84 89 86 85 78 C81 86 71 86 67 78 C61 88 51 86 49 76 C41 82 31 78 31 70 C25 74 16 70 18 62 C11 58 8 48 12 42 Z"/>
+    <circle cx="17" cy="46" r="1.7" fill="#3b2f22" stroke="none"/></g></svg>`,
+  nummulite:`<svg viewBox="0 0 120 120"><g fill="none" stroke="#3b2f22" stroke-width="2.4">
+    <circle cx="60" cy="60" r="42"/>
+    <path d="M60 60 C60 52 70 52 70 62 C70 76 50 76 50 60 C50 40 80 40 80 62 C80 88 44 88 44 60"/>
+    <g stroke-width="1.3"><line x1="60" y1="18" x2="60" y2="30"/><line x1="60" y1="90" x2="60" y2="102"/><line x1="18" y1="60" x2="30" y2="60"/><line x1="90" y1="60" x2="102" y2="60"/></g></g></svg>`,
+  coral:`<svg viewBox="0 0 120 120"><g fill="none" stroke="#3b2f22" stroke-width="2.4" stroke-linecap="round">
+    <path d="M60 108 V72"/><path d="M60 86 C50 78 46 66 44 54"/><path d="M60 80 C70 72 74 60 76 48"/><path d="M60 72 C58 62 60 48 60 38"/>
+    <path d="M44 54 C40 48 40 42 42 36"/><path d="M44 54 C48 48 50 44 52 40"/><path d="M76 48 C80 42 82 38 82 32"/><path d="M76 48 C72 42 70 38 70 34"/>
+    <circle cx="42" cy="34" r="3"/><circle cx="52" cy="38" r="3"/><circle cx="82" cy="30" r="3"/><circle cx="70" cy="32" r="3"/><circle cx="60" cy="36" r="3"/></g></svg>`,
+  fern:`<svg viewBox="0 0 120 120"><g fill="none" stroke="#3b2f22" stroke-width="2.4" stroke-linecap="round">
+    <path d="M38 108 C56 84 66 54 74 18"/>
+    <g stroke-width="1.7"><path d="M64 42 C58 40 52 42 48 48"/><path d="M64 42 C68 36 68 30 66 26"/>
+    <path d="M59 56 C51 54 45 56 41 62"/><path d="M59 56 C63 50 63 44 61 40"/>
+    <path d="M54 70 C46 68 40 70 36 76"/><path d="M54 70 C58 64 58 58 56 54"/>
+    <path d="M49 84 C41 82 35 84 31 90"/><path d="M49 84 C53 78 53 72 51 68"/></g></g></svg>`
 };
 
 // 배점
@@ -714,8 +906,18 @@ let state = {
   verdict:null,        // 'real' | 'fake'
   reasonSel:null,      // 선택한 근거 index
   revealed:false,      // 피드백 공개 여부
-  results:[]           // [{id, name, verdictOk, reasonOk, points, isReal, chosenVerdict}]
+  trust:100,           // 감정 신뢰도 게이지 (0~100)
+  magnify:false,       // 돋보기 모드 on/off (표본마다 초기화)
+  inspected:[],        // 돋보기로 조사한 항목 라벨 (표본마다 초기화)
+  results:[]           // [{id, name, verdictOk, reasonOk, points, isReal, chosenVerdict, trustDelta}]
 };
+
+// 이전 저장본/구버전 호환: 없는 필드 보정
+function normalizeState(){
+  if(typeof state.trust!=='number') state.trust=100;
+  if(typeof state.magnify!=='boolean') state.magnify=false;
+  if(!Array.isArray(state.inspected)) state.inspected=[];
+}
 
 function saveState(){
   try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
@@ -732,11 +934,41 @@ const app = document.getElementById('app');
 const helpFab = document.getElementById('helpFab');
 
 function render(){
+  normalizeState();
   helpFab.style.display = (state.screen==='intro') ? 'none' : 'flex';
   if(state.screen==='intro')   return renderIntro();
   if(state.screen==='tutorial')return renderTutorial();
   if(state.screen==='appraise')return renderAppraise();
   if(state.screen==='result')  return renderResult();
+}
+
+/* ---------- 감정 신뢰도 게이지 ---------- */
+function trustStatus(t){
+  if(t>=80) return {label:'신뢰받는 감정사', cls:'t-high'};
+  if(t>=40) return {label:'의심받는 감정사', cls:'t-mid'};
+  return {label:'자격 위태로움', cls:'t-low'};
+}
+function trustBar(){
+  const s = trustStatus(state.trust);
+  return `
+  <div class="trust ${s.cls}" id="trustBar">
+    <div class="trust-head">
+      <span class="trust-name">감정 신뢰도 <b>信賴度</b></span>
+      <span class="trust-status">${s.label}</span>
+    </div>
+    <div class="trust-track"><i style="width:${state.trust}%"></i><span class="trust-val">${state.trust}</span></div>
+  </div>`;
+}
+// 변동 숫자 애니메이션 (붉게/파랗게 떠오름)
+function flashTrust(delta){
+  if(!delta) return;
+  const bar = document.getElementById('trustBar');
+  if(!bar) return;
+  const f = document.createElement('span');
+  f.className = 'trust-flash ' + (delta>0?'up':'down');
+  f.textContent = (delta>0?'+':'') + delta;
+  bar.appendChild(f);
+  setTimeout(()=>{ if(f.parentNode) f.parentNode.removeChild(f); }, 1100);
 }
 
 /* ---------- 진행바 상단 ---------- */
@@ -787,6 +1019,16 @@ function renderIntro(){
 function docCard(sp, extra=''){
   const num = sp.tutorial ? '#0' : '#'+sp.id;
   const emoji = ICONS[sp.icon] || '🦴';
+  const mag = state.magnify;
+  // 돋보기 모드에서 항목을 조사하면 상호작용/강조 부여
+  const fieldMarkup = (f, keyId, isKey)=>{
+    const inspected = state.inspected.indexOf(keyId)>=0;
+    const cls = ['field'];
+    if(isKey) cls.push('key');
+    if(inspected) cls.push('inspected');
+    const onClick = mag ? ` onclick="inspectField(this,'${keyId.replace(/'/g,"\\'")}')"` : '';
+    return {cls:cls.join(' '), onClick};
+  };
   let fieldsHtml = sp.fields.map(f=>{
     const hint = FIELD_HINTS[f.k];
     const hintHtml = hint
@@ -794,20 +1036,31 @@ function docCard(sp, extra=''){
            <span class="hint-ic">?</span><span class="hint-tip">${hint}</span>
          </span>`
       : '';
+    const isKey = KEY_FIELDS.indexOf(f.k)>=0;
+    const m = fieldMarkup(f, f.k, isKey);
     return `
-    <div class="field">
+    <div class="${m.cls}"${m.onClick}>
       <div class="k">${f.icon?`<span>${f.icon}</span>`:''}<span class="k-label">${f.k}</span>${hintHtml}</div>
       <div class="v">${f.v}</div>
     </div>`;
   }).join('');
-  // 판매자 주장 / 제보
-  const claimClass = sp.claimIsTip ? 'field claim tip' : 'field claim';
+  // 판매자 주장 / 제보 (핵심 조사 항목)
+  const claimBase = sp.claimIsTip ? 'field claim tip' : 'field claim';
   const claimKey = sp.claimIsTip ? '⚠️ 제보' : '💬 판매자';
   fieldsHtml += `
-    <div class="${claimClass}">
+    <div class="${claimBase} key${state.inspected.indexOf('claim')>=0?' inspected':''}"${mag?` onclick="inspectField(this,'claim')"`:''}>
       <div class="k">${claimKey}</div>
       <div class="v">${sp.claim}</div>
     </div>`;
+
+  const tools = `
+  <div class="doc-tools">
+    <button class="tool-btn ${mag?'on':''}" onclick="toggleMagnify()">🔍 돋보기 ${mag?'ON':'OFF'}</button>
+    <button class="tool-btn" onclick="openObserve()">🔬 화석 관찰</button>
+  </div>
+  ${mag
+    ?`<p class="mag-hint">항목 위에 올리거나 눌러 자세히 들여다보세요. 핵심 단서는 돋보기로 또렷해집니다.</p>`
+    :`<p class="mag-hint">🗣️ 한 선생: "눈으로만 보지 말고, 자세히 들여다봐라."</p>`}`;
 
   return `
   <div class="doc-title">
@@ -816,7 +1069,8 @@ function docCard(sp, extra=''){
     <span>${sp.name}</span>
   </div>
   <div class="doc-sub">— 감정 서류철 · 현장 노트 —</div>
-  <div class="fields">${fieldsHtml}</div>
+  ${tools}
+  <div class="fields${mag?' mag':''}">${fieldsHtml}</div>
   ${extra}`;
 }
 
@@ -842,10 +1096,11 @@ function renderTutorial(){
 
   app.innerHTML = `
   ${topbar('튜토리얼', '연습', 8)}
+  ${trustBar()}
   <div class="folder card">
     ${docCard(sp)}
     <div style="margin:14px 0;padding:10px 12px;border-radius:8px;background:var(--paper-2);border:1px dashed var(--line);font-size:.9rem" class="muted">
-      💡 튜토리얼입니다. 한 선생의 안내를 따라 감정법을 익혀보세요. 언제든 우측 하단 <b>📜 감정 규칙</b>을 열 수 있어요.
+      💡 튜토리얼입니다. 한 선생의 안내를 따라 감정법을 익혀보세요. 신뢰도는 아직 변하지 않아요. 언제든 우측 하단 <b>📜 감정 규칙</b>을 열 수 있어요.
     </div>
     ${bubble}
     <div style="margin-top:14px">${btn}</div>
@@ -887,7 +1142,7 @@ function renderAppraise(){
           </button>`).join('')}
       </div>
       <div class="btn-row">
-        <button class="btn primary" ${state.reasonSel===null?'disabled':''} onclick="confirmAppraisal()">🔨 감정 확정</button>
+        <button class="btn primary" ${state.reasonSel===null?'disabled':''} onclick="askConfirm()">🔨 감정 확정</button>
       </div>`;
     }
   } else {
@@ -929,8 +1184,15 @@ function renderAppraise(){
     if(line) mentorHtml = mentorBox(line, rr.verdictOk?'ok':'no');
   }
 
+  // 신뢰도 바닥 경고 (게임은 계속됨 — 수업용 안전장치: 0이어도 완주 가능)
+  const warnHtml = (state.trust<=20)
+    ? `<div class="trust-warn"><b>한 선생:</b> "신뢰가 바닥까지 떨어졌다. 허나 감정사는 끝까지 감정한다 — 마지막 표본까지 눈을 떼지 마라."</div>`
+    : '';
+
   app.innerHTML = `
   ${topbar('감정 '+posNow+'/4', '위조를 찾아라', pctClamped)}
+  ${trustBar()}
+  ${warnHtml}
   <div class="folder card">
     ${mentorHtml}
     ${docCard(sp)}
@@ -980,6 +1242,7 @@ function renderResult(){
       <div class="grade">${g.emoji} ${g.title}</div>
       <div class="score-big">${total}<span style="font-size:1.4rem"> / ${maxTotal}점</span></div>
       <div class="score-sub">진위 판정 정확도 ${verdictCorrect}/4 · 종합 정확도 ${acc}%</div>
+      <div class="score-sub">감정 신뢰도 <b>${state.trust}</b> · ${trustStatus(state.trust).label}</div>
       <p class="muted" style="font-size:.95rem;margin:10px 4px 0">${g.desc}</p>
     </div>
 
@@ -1001,7 +1264,8 @@ function renderResult(){
    ============================================================ */
 
 function startGame(){
-  state = {screen:'tutorial', index:0, tutStep:0, verdict:null, reasonSel:null, revealed:false, results:[]};
+  state = {screen:'tutorial', index:0, tutStep:0, verdict:null, reasonSel:null, revealed:false,
+           trust:100, magnify:false, inspected:[], results:[]};
   sndFlip(); saveState(); render(); scrollTop();
 }
 
@@ -1014,6 +1278,7 @@ function finishTutorial(){
   state.screen='appraise';
   state.index=1;              // 첫 본감정 표본 #1
   state.verdict=null; state.reasonSel=null; state.revealed=false;
+  state.magnify=false; state.inspected=[];   // 표본마다 돋보기 초기화
   sndFlip(); saveState(); render(); scrollTop();
 }
 
@@ -1042,9 +1307,13 @@ function confirmAppraisal(){
   if(verdictOk && reasonOk) points = PT_FULL;
   else if(verdictOk)        points = PT_PART;
 
+  // 신뢰도 변동: 틀리면 -20, 맞으면 +5, 근거까지 맞으면 +3 보너스 (0~100)
+  const trustDelta = verdictOk ? (5 + (reasonOk?3:0)) : -20;
+  state.trust = Math.max(0, Math.min(100, state.trust + trustDelta));
+
   state.results.push({
     id:sp.id, name:sp.name, isReal:sp.isReal,
-    verdictOk, reasonOk, points, chosenVerdict:state.verdict
+    verdictOk, reasonOk, points, chosenVerdict:state.verdict, trustDelta
   });
   state.revealed=true;
   saveState();
@@ -1057,6 +1326,7 @@ function confirmAppraisal(){
     sndWrong();
   }
   render();
+  flashTrust(trustDelta);   // 게이지 변동 숫자 애니메이션
   scrollToFeedback();
 }
 
@@ -1069,13 +1339,81 @@ function nextSpecimen(){
   }
   state.index++;
   state.verdict=null; state.reasonSel=null; state.revealed=false;
+  state.magnify=false; state.inspected=[];   // 새 표본 → 돋보기 초기화
   saveState(); render(); scrollTop();
 }
 
 function restart(){
   clearState();
-  state = {screen:'intro', index:0, tutStep:0, verdict:null, reasonSel:null, revealed:false, results:[]};
+  state = {screen:'intro', index:0, tutStep:0, verdict:null, reasonSel:null, revealed:false,
+           trust:100, magnify:false, inspected:[], results:[]};
   render(); scrollTop();
+}
+
+/* ---------- B. 되돌릴 수 없는 감정 도장 (확인 단계) ---------- */
+function askConfirm(){
+  if(state.reasonSel===null || state.revealed) return;
+  const sp = SPECIMENS[state.index];
+  const vLabel = state.verdict==='real' ? '진품(眞品)' : '위조(僞造)';
+  const vCls   = state.verdict==='real' ? 'cs-real' : 'cs-fake';
+  const rLabel = sp.reasons[state.reasonSel];
+  document.getElementById('confirmSummary').innerHTML =
+    `<div><span class="cs-k">판정</span> <b class="${vCls}">${vLabel}</b></div>
+     <div><span class="cs-k">근거</span> ${rLabel}</div>`;
+  document.getElementById('confirmModal').classList.add('on');
+}
+function closeConfirm(){ document.getElementById('confirmModal').classList.remove('on'); }
+function doConfirm(){ closeConfirm(); confirmAppraisal(); }
+
+/* ---------- C. 돋보기 서류 검토 ---------- */
+function toggleMagnify(){
+  state.magnify = !state.magnify;
+  sndFlip(); saveState(); render(); scrollTop(false);
+}
+// 항목 조사: 강조(peek) + '조사됨' 표시 유지 (전체 재렌더 없이 DOM만 갱신)
+function inspectField(el, keyId){
+  el.classList.add('inspected');
+  el.classList.toggle('peek');                 // 다시 누르면 확대 해제(강조는 유지)
+  if(state.inspected.indexOf(keyId)<0){
+    state.inspected.push(keyId);
+    saveState();
+  }
+  tone({freq:880, dur:.05, type:'triangle', gain:.05});  // 가벼운 확인음
+}
+
+/* ---------- D. 화석 관찰 뷰 (드래그 회전 + 확대) ---------- */
+let obs = {rot:0, zoom:1};
+function openObserve(){
+  const sp = SPECIMENS[state.index];
+  const art = document.getElementById('obsArt');
+  art.innerHTML = FOSSIL_ART[sp.icon] || FOSSIL_ART.trilobite;
+  document.getElementById('obsTitle').textContent = '🔬 화석 관찰 — ' + sp.name;
+  obs = {rot:0, zoom:1};
+  applyObs();
+  document.getElementById('obsModal').classList.add('on');
+  sndFlip();
+}
+function applyObs(){
+  const art = document.getElementById('obsArt');
+  if(art) art.style.transform = `rotate(${obs.rot}deg) scale(${obs.zoom})`;
+}
+function obsZoomCycle(){
+  obs.zoom = obs.zoom >= 2.2 ? 1 : +(obs.zoom + 0.6).toFixed(1);
+  applyObs();
+}
+function obsReset(){ obs.rot = 0; obs.zoom = 1; applyObs(); }
+function closeObserve(){ document.getElementById('obsModal').classList.remove('on'); }
+// 드래그(마우스/터치)로 회전
+function initObsDrag(){
+  const stage = document.getElementById('obsStage');
+  if(!stage) return;
+  let dragging=false, sx=0, startRot=0;
+  const getX = e => e.touches ? e.touches[0].clientX : e.clientX;
+  const down = e =>{ dragging=true; sx=getX(e); startRot=obs.rot; stage.classList.add('grabbing'); };
+  const move = e =>{ if(!dragging) return; obs.rot = startRot + (getX(e)-sx)*0.8; applyObs(); if(e.cancelable && e.touches) e.preventDefault(); };
+  const up   = ()=>{ dragging=false; stage.classList.remove('grabbing'); };
+  stage.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
+  stage.addEventListener('touchstart',down,{passive:true}); stage.addEventListener('touchmove',move,{passive:false}); stage.addEventListener('touchend',up);
 }
 
 /* ============================================================
@@ -1201,6 +1539,7 @@ function scrollToFeedback(){
 
 /* ---------- 시작 ---------- */
 updateMuteIcon();
+initObsDrag();
 render();
 </script>
 </body>
