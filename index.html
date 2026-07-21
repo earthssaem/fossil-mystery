@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>위조 화석 스캔들 — 화석 감정 미스터리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   위조 화석 스캔들 — 단일 파일 웹게임
+   [ 스타일 ] 섹션
+   - 세피아/아이보리 기반 크라프트지 감정 서류 느낌
+   - 포인트 컬러: 감정 도장 붉은색
+   ============================================================ */
+
+:root{
+  --paper:#f4ead5;
+  --paper-2:#efe2c6;
+  --paper-dark:#e5d3ac;
+  --ink:#3b2f22;
+  --ink-soft:#5c4c38;
+  --kraft:#c9b184;
+  --line:#c2a878;
+  --stamp:#b6362c;
+  --stamp-deep:#8f251d;
+  --good:#3f7d52;
+  --bad:#b6362c;
+  --gold:#a9852f;
+  --shadow:rgba(60,44,22,.28);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+html,body{margin:0;padding:0;}
+
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 20% 10%, #efe1c2 0, transparent 60%),
+    radial-gradient(circle at 80% 90%, #e7d5ae 0, transparent 55%),
+    #e9dab8;
+  min-height:100vh;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 종이 질감 (미세 노이즈 대체용 반복 그라디언트) */
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(120,90,50,.025) 0, rgba(120,90,50,.025) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(120,90,50,.025) 0, rgba(120,90,50,.025) 1px, transparent 1px, transparent 4px);
+  z-index:0;
+}
+
+.wrap{
+  position:relative;
+  z-index:1;
+  max-width:640px;
+  margin:0 auto;
+  padding:16px 16px 48px;
+  min-height:100vh;
+}
+
+/* ---------- 헤딩 손글씨 ---------- */
+.hand{font-family:'Nanum Pen Script',cursive;}
+.serif{font-family:'Gowun Batang',serif;}
+
+h1,h2,h3{margin:0;font-weight:700;}
+
+/* ---------- 종이 카드 ---------- */
+.card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:10px;
+  box-shadow:0 6px 18px var(--shadow), inset 0 0 40px rgba(180,150,100,.12);
+  padding:20px;
+  position:relative;
+}
+.card + .card{margin-top:16px;}
+
+/* 서류철 상단 클립/탭 느낌 */
+.folder{
+  background:linear-gradient(180deg,var(--paper) 0,var(--paper-2) 100%);
+  border:1px solid var(--line);
+  border-radius:6px 6px 10px 10px;
+  box-shadow:0 8px 22px var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+.folder::before{
+  content:"";
+  position:absolute;top:0;left:0;right:0;height:8px;
+  background:repeating-linear-gradient(90deg,var(--kraft) 0,var(--kraft) 22px,var(--paper-dark) 22px,var(--paper-dark) 30px);
+  opacity:.6;
+}
+
+/* ---------- 버튼 ---------- */
+button{font-family:inherit;cursor:pointer;border:none;}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 22px;
+  font-size:1.05rem;font-weight:700;
+  border-radius:8px;
+  border:2px solid var(--ink-soft);
+  background:var(--paper);
+  color:var(--ink);
+  transition:transform .08s ease, box-shadow .15s ease, background .15s;
+  box-shadow:0 3px 0 var(--ink-soft);
+  width:100%;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--ink-soft);}
+.btn.primary{
+  background:var(--stamp);color:#fff8ee;border-color:var(--stamp-deep);
+  box-shadow:0 3px 0 var(--stamp-deep);
+}
+.btn.ghost{
+  background:transparent;border-style:dashed;box-shadow:none;font-weight:500;
+  padding:10px 16px;font-size:.95rem;
+}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none;}
+
+.btn-row{display:flex;gap:12px;margin-top:16px;}
+.btn-row .btn{flex:1;}
+
+/* 판정 큰 버튼 */
+.verdict-row{display:flex;gap:14px;margin-top:6px;}
+.verdict-btn{
+  flex:1;padding:22px 10px;font-size:1.25rem;font-weight:700;
+  border-radius:12px;border:3px solid var(--ink-soft);
+  background:var(--paper);color:var(--ink);
+  box-shadow:0 4px 0 var(--ink-soft);
+  transition:transform .08s, background .15s, color .15s, border-color .15s;
+}
+.verdict-btn .em{display:block;font-size:1.7rem;margin-bottom:4px;}
+.verdict-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink-soft);}
+.verdict-btn.sel-real{background:var(--good);color:#fff;border-color:#2c5c3b;box-shadow:0 4px 0 #2c5c3b;}
+.verdict-btn.sel-fake{background:var(--stamp);color:#fff;border-color:var(--stamp-deep);box-shadow:0 4px 0 var(--stamp-deep);}
+
+/* ---------- 진행 바 ---------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;gap:10px;
+}
+.progress{
+  flex:1;height:10px;border-radius:6px;background:var(--paper-dark);
+  border:1px solid var(--line);overflow:hidden;
+}
+.progress > i{
+  display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--stamp));
+  width:0;transition:width .4s ease;
+}
+.badge{
+  font-family:'Nanum Pen Script',cursive;font-size:1.3rem;
+  background:var(--ink);color:var(--paper);
+  padding:2px 12px;border-radius:20px;white-space:nowrap;
+}
+
+/* ---------- 감정 서류 항목 ---------- */
+.doc-title{
+  font-family:'Gowun Batang',serif;
+  font-size:1.35rem;font-weight:700;margin-bottom:4px;
+  display:flex;align-items:center;gap:10px;
+}
+.spec-no{font-family:'Nanum Pen Script',cursive;font-size:1.6rem;color:var(--stamp);}
+.doc-sub{color:var(--ink-soft);font-size:.9rem;margin-bottom:14px;}
+
+.fields{margin-top:6px;}
+.field{
+  display:flex;gap:10px;padding:11px 12px;
+  border-bottom:1px dashed var(--line);
+  align-items:flex-start;
+}
+.field:last-child{border-bottom:none;}
+.field .k{
+  flex:0 0 92px;font-weight:700;color:var(--ink-soft);font-size:.92rem;
+  display:flex;align-items:center;gap:6px;
+}
+.field .v{flex:1;font-size:1rem;}
+.field.claim{
+  background:rgba(182,54,44,.06);border-radius:8px;border-bottom:none;margin-top:8px;
+}
+.field.claim .v{font-style:italic;font-family:'Gowun Batang',serif;}
+.field.tip .v{font-family:'Nanum Pen Script',cursive;font-size:1.25rem;color:var(--stamp-deep);}
+
+/* fossil svg icon */
+.ficon{width:26px;height:26px;flex:0 0 26px;vertical-align:middle;}
+
+/* ---------- 근거 선택지 ---------- */
+.reasons{margin-top:8px;display:flex;flex-direction:column;gap:10px;}
+.reason{
+  text-align:left;width:100%;
+  padding:14px 14px;border-radius:10px;
+  border:2px solid var(--line);background:var(--paper);
+  font-size:1rem;color:var(--ink);
+  display:flex;gap:10px;align-items:flex-start;line-height:1.45;
+  transition:border-color .15s, background .15s, transform .06s;
+}
+.reason:active{transform:scale(.99);}
+.reason .n{
+  flex:0 0 26px;height:26px;border-radius:50%;
+  background:var(--ink-soft);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;
+}
+.reason.sel{border-color:var(--stamp);background:rgba(182,54,44,.08);}
+.reason.sel .n{background:var(--stamp);}
+
+/* ---------- 피드백 ---------- */
+.feedback{
+  margin-top:16px;padding:16px;border-radius:10px;
+  border-left:6px solid var(--gold);background:var(--paper-2);
+  animation:fadein .35s ease;
+}
+.feedback.ok{border-left-color:var(--good);background:rgba(63,125,82,.1);}
+.feedback.no{border-left-color:var(--bad);background:rgba(182,54,44,.1);}
+.feedback .fb-tag{font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:1.05rem;}
+.feedback.ok .fb-tag{color:var(--good);}
+.feedback.no .fb-tag{color:var(--bad);}
+.feedback .fb-body{font-size:.98rem;}
+.feedback .fb-earn{margin-top:10px;font-family:'Nanum Pen Script',cursive;font-size:1.4rem;color:var(--ink-soft);}
+
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ---------- 도장 연출 ---------- */
+.stamp-fx{
+  position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.stamp-mark{
+  font-family:'Nanum Pen Script',cursive;
+  border:6px solid var(--stamp);color:var(--stamp);
+  border-radius:14px;padding:14px 34px;font-size:2.6rem;font-weight:700;
+  transform:rotate(-14deg) scale(2.4);opacity:0;
+  background:rgba(244,234,213,.7);
+  letter-spacing:2px;
+  box-shadow:0 0 0 4px rgba(182,54,44,.25);
+}
+.stamp-mark.fake{border-color:var(--stamp-deep);color:var(--stamp-deep);}
+.stamp-mark.go{animation:stamp .9s cubic-bezier(.2,1.2,.3,1) forwards;}
+@keyframes stamp{
+  0%{opacity:0;transform:rotate(-14deg) scale(2.6);}
+  35%{opacity:1;transform:rotate(-14deg) scale(1);}
+  70%{opacity:1;transform:rotate(-14deg) scale(1);}
+  100%{opacity:0;transform:rotate(-14deg) scale(1.05);}
+}
+
+/* ---------- 인트로 ---------- */
+.intro-hero{text-align:center;padding:30px 16px 10px;}
+.intro-hero .kicker{font-family:'Nanum Pen Script',cursive;font-size:1.5rem;color:var(--stamp);letter-spacing:1px;}
+.intro-hero h1{
+  font-family:'Gowun Batang',serif;font-size:2.15rem;line-height:1.25;margin:6px 0 4px;
+}
+.intro-hero .em{color:var(--stamp);}
+.brief{font-size:1rem;}
+.brief p{margin:10px 0;}
+.brief .lead{font-family:'Gowun Batang',serif;font-size:1.08rem;}
+
+.tag-list{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;justify-content:center;}
+.tag{
+  background:var(--paper-dark);border:1px solid var(--line);
+  border-radius:20px;padding:5px 14px;font-size:.85rem;color:var(--ink-soft);
+}
+
+/* ---------- 모달(규칙) ---------- */
+.modal-back{
+  position:fixed;inset:0;background:rgba(40,28,14,.55);z-index:60;
+  display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;
+}
+.modal-back.on{display:flex;}
+.modal{
+  background:var(--paper);border-radius:12px;max-width:560px;width:100%;
+  padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.4);border:1px solid var(--line);
+  margin:auto;
+}
+.modal h2{font-family:'Gowun Batang',serif;font-size:1.5rem;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.rule-block{margin:14px 0;padding:14px;border-radius:10px;background:var(--paper-2);border:1px solid var(--line);}
+.rule-block h3{font-size:1.05rem;margin-bottom:6px;color:var(--stamp-deep);}
+.rule-block ul{margin:6px 0 0;padding-left:18px;}
+.rule-block li{margin:4px 0;font-size:.95rem;}
+.rule-block .map{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;
+}
+.chip{
+  background:var(--paper);border:1px solid var(--line);border-radius:8px;
+  padding:4px 10px;font-size:.85rem;
+}
+.chip b{color:var(--stamp-deep);}
+.rule-block.uplift{border-color:var(--gold);background:rgba(169,133,47,.1);}
+
+/* 규칙 보기 플로팅 버튼 */
+.help-fab{
+  position:fixed;right:14px;bottom:14px;z-index:40;
+  width:auto;padding:12px 16px;border-radius:30px;
+  background:var(--ink);color:var(--paper);font-weight:700;font-size:.9rem;
+  box-shadow:0 6px 16px var(--shadow);border:2px solid var(--ink);
+  display:flex;align-items:center;gap:6px;
+}
+.help-fab:active{transform:translateY(2px);}
+
+/* ---------- 결과 리포트 ---------- */
+.result-hero{text-align:center;padding:10px 0 4px;}
+.result-hero .grade{
+  font-family:'Gowun Batang',serif;font-size:2.3rem;color:var(--stamp);font-weight:700;
+}
+.score-big{font-family:'Nanum Pen Script',cursive;font-size:3.4rem;color:var(--ink);line-height:1;}
+.score-sub{color:var(--ink-soft);font-size:.95rem;}
+
+.review-item{
+  padding:12px;border-radius:10px;border:1px solid var(--line);
+  background:var(--paper-2);margin-top:10px;
+}
+.review-item .rv-head{display:flex;align-items:center;gap:8px;font-weight:700;flex-wrap:wrap;}
+.review-item .pill{
+  font-size:.78rem;padding:2px 9px;border-radius:20px;font-weight:700;color:#fff;
+}
+.pill.ok{background:var(--good);}
+.pill.part{background:var(--gold);}
+.pill.no{background:var(--bad);}
+.review-item .rv-body{font-size:.92rem;margin-top:6px;color:var(--ink-soft);}
+.review-item .rv-pts{margin-left:auto;font-family:'Nanum Pen Script',cursive;font-size:1.3rem;color:var(--ink-soft);}
+
+.concept-grid{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.concept{
+  padding:12px 14px;border-radius:10px;background:var(--paper);border:1px dashed var(--line);
+  font-size:.95rem;display:flex;gap:10px;align-items:flex-start;
+}
+.concept .cn{font-family:'Nanum Pen Script',cursive;font-size:1.4rem;color:var(--stamp);flex:0 0 auto;}
+
+.section-label{
+  font-family:'Nanum Pen Script',cursive;font-size:1.6rem;color:var(--stamp-deep);
+  margin:22px 0 6px;display:flex;align-items:center;gap:8px;
+}
+
+.center{text-align:center;}
+.muted{color:var(--ink-soft);}
+.sr{position:absolute;left:-9999px;}
+
+/* 데스크톱에서 살짝 여유 */
+@media(min-width:520px){
+  .wrap{padding:26px 22px 60px;}
+  .intro-hero h1{font-size:2.5rem;}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><!-- JS가 렌더링 --></div>
+
+<!-- 규칙 보기 플로팅 버튼 (인트로 이후 표시) -->
+<button class="help-fab" id="helpFab" style="display:none" onclick="openRules()">📜 감정 규칙</button>
+
+<!-- 규칙 모달 -->
+<div class="modal-back" id="rulesModal" onclick="if(event.target===this)closeRules()">
+  <div class="modal">
+    <h2>📜 감정 규칙 카드</h2>
+    <p class="muted" style="font-size:.9rem;margin:4px 0 0">화석으로 시대와 환경을 읽고, 모순을 찾아내세요.</p>
+
+    <div class="rule-block">
+      <h3>🕰️ 표준화석 = <u>시대</u>를 알려준다</h3>
+      <p style="font-size:.92rem;margin:2px 0">생존 기간이 <b>짧고</b>, 개체 수가 <b>많으며</b>, 분포 면적이 <b>넓다</b>.</p>
+      <div class="map">
+        <span class="chip">삼엽충·방추충 → <b>고생대</b></span>
+        <span class="chip">암모나이트·공룡 → <b>중생대</b></span>
+        <span class="chip">화폐석·매머드 → <b>신생대</b></span>
+      </div>
+    </div>
+
+    <div class="rule-block">
+      <h3>🌱 시상화석 = <u>환경</u>을 알려준다</h3>
+      <p style="font-size:.92rem;margin:2px 0">생존 기간이 <b>길고</b>, 환경 변화에 <b>민감하며</b>, 분포 면적이 <b>좁다</b>.</p>
+      <div class="map">
+        <span class="chip">산호 → <b>따뜻하고 얕은 바다</b></span>
+        <span class="chip">고사리 → <b>따뜻하고 습한 육지</b></span>
+      </div>
+    </div>
+
+    <div class="rule-block">
+      <h3>⚖️ 모순 판정의 핵심</h3>
+      <p style="font-size:.92rem;margin:2px 0">같은 표본(같은 층준)에서 나온 화석들이 서로 <b>다른 시대</b>나 <b>다른 환경</b>을 가리키면 위조를 의심하라.</p>
+    </div>
+
+    <div class="rule-block uplift">
+      <h3>⛰️ 융기 — 예외를 기억하라</h3>
+      <p style="font-size:.92rem;margin:2px 0">바다에서 만들어진 지층이 <b>융기</b>하면, 바다 생물의 화석이 <b>높은 산</b>에서도 발견될 수 있다.</p>
+      <p style="font-size:.92rem;margin:6px 0 0">예: 히말라야의 암모나이트, 태백의 삼엽충 → <b>이건 모순이 아니다.</b></p>
+    </div>
+
+    <button class="btn primary" style="margin-top:8px" onclick="closeRules()">닫기</button>
+  </div>
+</div>
+
+<!-- 도장 연출 레이어 -->
+<div class="stamp-fx" id="stampFx" style="display:none">
+  <div class="stamp-mark" id="stampMark">진품 감정 완료</div>
+</div>
+
+<script>
+/* ============================================================
+   [ 설정 데이터 ] 섹션
+   - 표본 데이터는 배열 하나로 분리 → 새 표본 추가가 쉬움
+   - 과학적 매핑(화석·시대·환경)은 교사 검수 완료본. 임의 변경 금지.
+   ============================================================ */
+
+// 간단한 인라인 SVG 화석 아이콘 (라인/실루엣 수준)
+const ICONS = {
+  trilobite: '🪲',   // 삼엽충
+  fusulinid: '🌾',   // 방추충 (곡물알 실루엣 느낌)
+  ammonite: '🐚',    // 암모나이트
+  dino: '🦕',        // 공룡
+  nummulite: '🪙',   // 화폐석
+  coral: '🪸',       // 산호
+  fern: '🌿',        // 고사리
+  none: '—'
+};
+
+// 배점
+const PT_FULL = 25;   // 진위 O + 근거 O
+const PT_PART = 15;   // 진위 O + 근거 X
+const PT_NONE = 0;    // 진위 X
+
+// 표본 세트 (튜토리얼 #0 + 본감정 #1~#4)
+const SPECIMENS = [
+  {
+    id:0,
+    tutorial:true,
+    name:'삼엽충 화석',
+    icon:'trilobite',
+    fields:[
+      {k:'발굴 지층', v:'고생대 지층', icon:'📍'},
+      {k:'동반 화석', v:'방추충', icon:ICONS.fusulinid},
+      {k:'산지 환경', v:'따뜻하고 얕은 바다로 추정', icon:'🌊'},
+    ],
+    claim:'"고생대 표준 화석입니다."',
+    isReal:true,
+    // 튜토리얼은 근거 선택 없이 말풍선으로 안내
+    tutorialSteps:[
+      '먼저 표준화석으로 <b>시대</b>를 읽어보세요.',
+      '삼엽충은 → <b>고생대</b>!',
+      '동반 화석도 고생대인지 확인해 볼까요?',
+      '방추충도 → <b>고생대</b>!',
+      '시대가 서로 일치하네요. 둘 다 바다 생물이라 환경도 맞고요. <b>진품</b>입니다.'
+    ],
+    feedbackOk:'좋아요! 삼엽충과 방추충 모두 고생대 표준화석이고, 둘 다 바다 생물이라 시대·환경이 서로 일치합니다. 모순이 없으니 진품이에요.'
+  },
+  {
+    id:1,
+    name:'공룡 뼈 화석',
+    icon:'dino',
+    fields:[
+      {k:'발굴 지층', v:'중생대 지층', icon:'📍'},
+      {k:'동반 화석', v:'화폐석', icon:ICONS.nummulite},
+      {k:'산지 환경', v:'육지', icon:'🏞️'},
+    ],
+    claim:'"중생대를 대표하는 완벽한 표본입니다."',
+    isReal:false,
+    reasons:[
+      '표준화석끼리 시대가 서로 맞지 않음',
+      '시상화석이 가리키는 환경이 서로 모순됨',
+      '표준화석의 조건(넓은 분포)에 어긋남',
+      '모순 없음(진품)'
+    ],
+    answer:0,
+    feedbackOk:'정확합니다. 공룡은 중생대, 화폐석은 신생대 표준화석이죠. 한 지층이 두 시대일 수 없으니 서류가 조작된 위조품입니다.',
+    feedbackNo:'동반 화석의 시대를 다시 보세요. 공룡(중생대)과 화폐석(신생대)이 같은 지층에 함께 있을 수 있을까요?',
+    review:'공룡=중생대 vs 화폐석=신생대. 표준화석끼리 시대 불일치 → 위조.'
+  },
+  {
+    id:2,
+    name:'산호 화석',
+    icon:'coral',
+    fields:[
+      {k:'발굴 지층', v:'같은 표본 덩어리에서 채취', icon:'📍'},
+      {k:'동반 화석', v:'고사리', icon:ICONS.fern},
+      {k:'산지 환경', v:'"따뜻하고 수심이 얕은 바다"라고 기재됨', icon:'🌊'},
+    ],
+    claim:'"바다 환경을 그대로 보여주는 귀한 표본입니다."',
+    isReal:false,
+    reasons:[
+      '표준화석끼리 시대가 서로 맞지 않음',
+      '시상화석이 가리키는 환경이 서로 모순됨',
+      '융기를 고려하면 모순이 아님(진품)',
+      '모순 없음(진품)'
+    ],
+    answer:1,
+    feedbackOk:'맞습니다. 산호는 바다, 고사리는 육지 시상화석입니다. 하나의 표본이 바다이면서 육지일 수는 없으니 조작된 위조품이에요.',
+    feedbackNo:'두 시상화석이 각각 어떤 환경을 알려주는지 떠올려 보세요. 바다(산호)와 육지(고사리)가 한 표본에 공존할 수 있을까요?',
+    review:'산호=바다 vs 고사리=육지. 시상화석 환경 모순 → 위조.'
+  },
+  {
+    id:3,
+    name:'암모나이트 화석',
+    icon:'ammonite',
+    critical:true,
+    fields:[
+      {k:'발굴 장소', v:'히말라야산맥 고지대 (해발 5,000 m 부근)', icon:'⛰️'},
+      {k:'동반 화석', v:'없음', icon:'—'},
+      {k:'산지 환경', v:'과거 바다', icon:'🌊'},
+    ],
+    claim:'제보자의 의심: "바다 생물이 어떻게 이렇게 높은 산에서 나오나? 명백한 위조다."',
+    claimIsTip:true,
+    isReal:true,
+    reasons:[
+      '바다 생물이 산에 있으므로 위조',
+      '표준화석 조건에 어긋나므로 위조',
+      '융기를 고려하면 모순이 아니므로 진품',
+      '시대가 맞지 않으므로 위조'
+    ],
+    answer:2,
+    feedbackOk:'훌륭한 감정입니다! 이건 함정이었어요. 바다에서 만들어진 지층이 융기하면 암모나이트가 산꼭대기에서도 나올 수 있습니다. 실제 히말라야의 사례죠. 진품입니다.',
+    feedbackNo:'성급했어요. 바다 생물이 산에서 나온다고 무조건 위조는 아닙니다. \'융기\'를 떠올려 보세요 — 히말라야, 태백의 사례처럼요.',
+    review:'융기로 설명됨. 바다 지층이 솟아 산이 됨(히말라야 사례) → 진품. 제보가 함정.'
+  },
+  {
+    id:4,
+    name:'방추충 화석',
+    icon:'fusulinid',
+    fields:[
+      {k:'발굴 지층', v:'고생대 지층', icon:'📍'},
+      {k:'산지 환경', v:'바다', icon:'🌊'},
+    ],
+    claim:'"이 방추충은 오직 이 좁은 지역에서만 드물게 발견되기 때문에, 시대를 콕 집어주는 완벽한 표준화석입니다."',
+    isReal:false,
+    reasons:[
+      '표준화석끼리 시대가 서로 맞지 않음',
+      '시상화석이 가리키는 환경이 서로 모순됨',
+      '표준화석의 조건(넓은 분포)에 어긋남',
+      '모순 없음(진품)'
+    ],
+    answer:2,
+    feedbackOk:'날카롭네요. 표준화석은 오히려 넓은 지역에 분포해야 시대를 판별하는 기준이 됩니다. \'좁은 지역에서만\'이라는 설명 자체가 표준화석의 조건을 위반한 조작이에요.',
+    feedbackNo:'표준화석의 \'조건\'을 다시 보세요. 분포 면적이 넓어야 할까요, 좁아야 할까요? 판매자의 설명이 그 조건과 맞는지 따져보세요.',
+    review:'표준화석은 넓은 분포가 조건. "좁은 지역에서만"은 조건 위반 → 위조.'
+  }
+];
+
+// 결과 개념 정리 카드 5개
+const CONCEPTS = [
+  {n:'①', t:'<b>표준화석</b> = 시대. 짧은 생존·많은 개체·<b>넓은 분포</b>.'},
+  {n:'②', t:'<b>시상화석</b> = 환경. 긴 생존·환경 민감·<b>좁은 분포</b>.'},
+  {n:'③', t:'시대 매핑 — 삼엽충·방추충(고생대) / 암모나이트·공룡(중생대) / 화폐석·매머드(신생대).'},
+  {n:'④', t:'환경 매핑 — 산호(얕고 따뜻한 바다) / 고사리(따뜻하고 습한 육지).'},
+  {n:'⑤', t:'<b>융기</b> — 바다 지층이 솟으면 바다 화석이 산에서도 나온다(히말라야·태백). 모순 아님!'}
+];
+
+// 등급 판정 (맞힌 표본 수 = 진위 정답 수, 튜토리얼 제외 5점 만점 아님 → 총 5표본 기준)
+function gradeFor(correctCount){
+  if(correctCount>=5) return {title:'수석 감정사', emoji:'🏅', desc:'완벽한 눈썰미! 위조의 흔적 하나 놓치지 않았습니다.'};
+  if(correctCount>=3) return {title:'정식 감정사', emoji:'🔎', desc:'믿을 만한 감정 실력입니다. 몇 가지 단서만 더 챙기면 완벽해요.'};
+  return {title:'수습 감정사', emoji:'📖', desc:'규칙 카드를 다시 익히고 재도전해 보세요. 다음엔 분명 더 날카로워집니다.'};
+}
+
+/* ============================================================
+   [ 게임 상태 ]
+   - 모든 상태는 JS 메모리에서 관리 (서버/DB 불필요)
+   - localStorage로 진행 임시저장(선택 기능)
+   ============================================================ */
+
+const STORE_KEY = 'fossil_scandal_v1';
+
+let state = {
+  screen:'intro',      // intro | tutorial | appraise | result
+  index:0,             // SPECIMENS 인덱스
+  tutStep:0,           // 튜토리얼 말풍선 단계
+  verdict:null,        // 'real' | 'fake'
+  reasonSel:null,      // 선택한 근거 index
+  revealed:false,      // 피드백 공개 여부
+  results:[]           // [{id, name, verdictOk, reasonOk, points, isReal, chosenVerdict}]
+};
+
+function saveState(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+}
+function clearState(){
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+}
+
+/* ============================================================
+   [ 렌더링 ] 섹션
+   ============================================================ */
+
+const app = document.getElementById('app');
+const helpFab = document.getElementById('helpFab');
+
+function render(){
+  helpFab.style.display = (state.screen==='intro') ? 'none' : 'flex';
+  if(state.screen==='intro')   return renderIntro();
+  if(state.screen==='tutorial')return renderTutorial();
+  if(state.screen==='appraise')return renderAppraise();
+  if(state.screen==='result')  return renderResult();
+}
+
+/* ---------- 진행바 상단 ---------- */
+function topbar(labelNow, labelTotal, pct){
+  return `
+  <div class="topbar">
+    <span class="badge">${labelNow}</span>
+    <div class="progress"><i style="width:${pct}%"></i></div>
+    <span class="badge" style="background:var(--stamp)">${labelTotal}</span>
+  </div>`;
+}
+
+/* ---------- 인트로 ---------- */
+function renderIntro(){
+  app.innerHTML = `
+  <div class="folder card">
+    <div class="intro-hero">
+      <div class="kicker">긴급 감정 의뢰</div>
+      <h1>위조 화석 <span class="em">스캔들</span></h1>
+      <p class="hand" style="font-size:1.5rem;color:var(--ink-soft);margin:2px 0 0">— 화석 감정 미스터리 —</p>
+    </div>
+
+    <div class="brief">
+      <p class="lead">당신은 화석 <b>감정사</b>입니다.</p>
+      <p>곧 경매에 오를 화석 컬렉션이 도착했습니다. 그런데 <b>그중 위조품이 섞여 있다</b>는 제보가 들어왔습니다.</p>
+      <p>각 표본에 붙은 감정 서류 — <b>발굴 지층·동반 화석·산지 환경·판매자 주장</b> — 을 읽고, 교과 개념(<b>표준화석·시상화석·융기</b>)으로 진품과 위조품을 가려내세요.</p>
+      <p class="center hand" style="font-size:1.6rem;color:var(--stamp);margin-top:14px">
+        경매 출품 화석 5점 중 위조품이 있다.<br>당신의 감정을 시작하라.
+      </p>
+    </div>
+
+    <div class="tag-list">
+      <span class="tag">🔍 표본 5점</span>
+      <span class="tag">⏱️ 약 20분</span>
+      <span class="tag">📚 통합과학 · 지질시대</span>
+    </div>
+
+    <button class="btn primary" onclick="startGame()">🔍 감정 시작</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="openRules()">📜 감정 규칙 먼저 보기</button>
+    ${hasSave()?`<button class="btn ghost" style="margin-top:8px" onclick="resumeGame()">이어서 감정하기 (임시저장)</button>`:''}
+  </div>`;
+}
+
+/* ---------- 화석 서류 카드 (공통) ---------- */
+function docCard(sp, extra=''){
+  const num = sp.tutorial ? '#0' : '#'+sp.id;
+  const emoji = ICONS[sp.icon] || '🦴';
+  let fieldsHtml = sp.fields.map(f=>`
+    <div class="field">
+      <div class="k">${f.icon?`<span>${f.icon}</span>`:''}${f.k}</div>
+      <div class="v">${f.v}</div>
+    </div>`).join('');
+  // 판매자 주장 / 제보
+  const claimClass = sp.claimIsTip ? 'field claim tip' : 'field claim';
+  const claimKey = sp.claimIsTip ? '⚠️ 제보' : '💬 판매자';
+  fieldsHtml += `
+    <div class="${claimClass}">
+      <div class="k">${claimKey}</div>
+      <div class="v">${sp.claim}</div>
+    </div>`;
+
+  return `
+  <div class="doc-title">
+    <span class="spec-no">${num}</span>
+    <span style="font-size:1.6rem">${emoji}</span>
+    <span>${sp.name}</span>
+  </div>
+  <div class="doc-sub">— 감정 서류철 · 현장 노트 —</div>
+  <div class="fields">${fieldsHtml}</div>
+  ${extra}`;
+}
+
+/* ---------- 튜토리얼 (#0) ---------- */
+function renderTutorial(){
+  const sp = SPECIMENS[0];
+  const totalSteps = sp.tutorialSteps.length;
+  const step = state.tutStep;
+  const done = step >= totalSteps;
+
+  const bubble = done
+    ? `<div class="feedback ok">
+         <div class="fb-tag">✅ 감정 완료 — 진품</div>
+         <div class="fb-body">${sp.feedbackOk}</div>
+       </div>`
+    : `<div class="feedback">
+         <div class="fb-tag">🗣️ 감정 안내 (${step+1}/${totalSteps})</div>
+         <div class="fb-body hand" style="font-size:1.35rem;color:var(--stamp-deep)">${sp.tutorialSteps[step]}</div>
+       </div>`;
+
+  const btn = done
+    ? `<button class="btn primary" onclick="finishTutorial()">본 감정 시작 →</button>`
+    : `<button class="btn primary" onclick="nextTutStep()">${step===totalSteps-1?'감정 결론 보기':'다음 →'}</button>`;
+
+  app.innerHTML = `
+  ${topbar('튜토리얼', '연습', 8)}
+  <div class="folder card">
+    ${docCard(sp)}
+    <div style="margin-top:14px;padding:10px 12px;border-radius:8px;background:var(--paper-2);border:1px dashed var(--line);font-size:.9rem" class="muted">
+      💡 튜토리얼입니다. 감정하는 법을 단계별로 익혀보세요. 언제든 우측 하단 <b>📜 감정 규칙</b>을 열 수 있어요.
+    </div>
+    ${bubble}
+    <div style="margin-top:14px">${btn}</div>
+  </div>`;
+}
+
+/* ---------- 본 감정 (#1~#4) ---------- */
+function renderAppraise(){
+  const sp = SPECIMENS[state.index];
+  // 본 감정 표본 순서 (전체 5표본 중 튜토리얼 제외 4점)
+  const doneCount = state.results.length;              // 이미 확정한 본감정 수
+  const posNow = sp.id;                                 // 1..4
+  const pct = 8 + (posNow-1)/4*84 + (state.revealed?21:0)/1; // 대략적 진행
+  const pctClamped = Math.min(96, 8 + ((posNow-1)+ (state.revealed?1:0))/4*88);
+
+  // 하단 판정부 구성
+  let panel = '';
+  if(!state.revealed){
+    // 1단계: 진품/위조
+    panel += `
+    <div class="section-label">1단계 · 진위 판정</div>
+    <div class="verdict-row">
+      <button class="verdict-btn ${state.verdict==='real'?'sel-real':''}" onclick="pickVerdict('real')">
+        <span class="em">✔️</span>진품
+      </button>
+      <button class="verdict-btn ${state.verdict==='fake'?'sel-fake':''}" onclick="pickVerdict('fake')">
+        <span class="em">✖️</span>위조
+      </button>
+    </div>`;
+
+    // 2단계: 근거 선택 (판정을 골라야 표시)
+    if(state.verdict){
+      panel += `
+      <div class="section-label">2단계 · 결정적 근거를 선택하세요</div>
+      <div class="reasons">
+        ${sp.reasons.map((r,i)=>`
+          <button class="reason ${state.reasonSel===i?'sel':''}" onclick="pickReason(${i})">
+            <span class="n">${i+1}</span><span>${r}</span>
+          </button>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" ${state.reasonSel===null?'disabled':''} onclick="confirmAppraisal()">🔨 감정 확정</button>
+      </div>`;
+    }
+  } else {
+    // 피드백 공개
+    const r = state.results[state.results.length-1];
+    const cls = r.verdictOk ? 'ok' : 'no';
+    const tag = r.verdictOk
+      ? (r.reasonOk ? '✅ 정답 · 진위와 근거 모두 맞음' : '☑️ 진위는 정답 · 근거는 아쉬움')
+      : '❌ 오답 · 진위 판정이 틀렸습니다';
+    const body = r.verdictOk
+      ? sp.feedbackOk
+      : sp.feedbackNo;
+    const earn = `+${r.points}점 획득 (${r.verdictOk? (r.reasonOk?'만점':'부분점수'):'0점'})`;
+    const isLast = (state.index >= SPECIMENS.length-1);
+    panel += `
+    <div class="feedback ${cls}">
+      <div class="fb-tag">${tag}</div>
+      <div class="fb-body">${body}</div>
+      ${!r.verdictOk && r.reasonOk===false && sp.feedbackOk ? `<div class="fb-body" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)"><b>정답 해설:</b> ${sp.feedbackOk}</div>`:''}
+      <div class="fb-earn">${earn}</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" onclick="nextSpecimen()">${isLast?'📋 감정 리포트 보기':'다음 표본 →'}</button>
+    </div>`;
+  }
+
+  app.innerHTML = `
+  ${topbar('감정 '+posNow+'/4', '위조를 찾아라', pctClamped)}
+  <div class="folder card">
+    ${docCard(sp)}
+    ${panel}
+  </div>`;
+}
+
+/* ---------- 결과 리포트 ---------- */
+function renderResult(){
+  const total = state.results.reduce((s,r)=>s+r.points,0);
+  const maxTotal = SPECIMENS.filter(s=>!s.tutorial).length * PT_FULL; // 4 * 25 = 100
+  const correctCount = state.results.filter(r=>r.verdictOk).length + 1; // +튜토리얼(항상 진품 학습완료)
+  // 등급은 전체 5표본 정답 기준 (튜토리얼 진품 포함)
+  const verdictCorrect = state.results.filter(r=>r.verdictOk).length;
+  const totalSpecimens = 5;
+  const gradeCount = verdictCorrect + 1; // 튜토리얼 1점 자동 포함
+  const g = gradeFor(gradeCount);
+  const acc = Math.round(total/maxTotal*100);
+
+  const reviews = state.results.map((r,i)=>{
+    const sp = SPECIMENS.find(s=>s.id===r.id);
+    let pill, pillCls;
+    if(!r.verdictOk){ pill='오답'; pillCls='no'; }
+    else if(!r.reasonOk){ pill='부분정답'; pillCls='part'; }
+    else { pill='정답'; pillCls='ok'; }
+    const truth = sp.isReal ? '진품' : '위조';
+    return `
+    <div class="review-item">
+      <div class="rv-head">
+        <span class="spec-no">#${sp.id}</span>
+        <span>${ICONS[sp.icon]||''} ${sp.name}</span>
+        <span class="pill ${pillCls}">${pill}</span>
+        <span class="pill ${sp.isReal?'ok':'no'}">${truth}</span>
+        <span class="rv-pts">+${r.points}</span>
+      </div>
+      <div class="rv-body">${sp.review}</div>
+    </div>`;
+  }).join('');
+
+  const concepts = CONCEPTS.map(c=>`
+    <div class="concept"><span class="cn">${c.n}</span><span>${c.t}</span></div>`).join('');
+
+  app.innerHTML = `
+  <div class="folder card">
+    <div class="result-hero">
+      <div class="hand" style="font-size:1.4rem;color:var(--stamp)">감정 리포트</div>
+      <div class="grade">${g.emoji} ${g.title}</div>
+      <div class="score-big">${total}<span style="font-size:1.4rem"> / ${maxTotal}점</span></div>
+      <div class="score-sub">진위 판정 정확도 ${verdictCorrect}/4 · 종합 정확도 ${acc}%</div>
+      <p class="muted" style="font-size:.95rem;margin:10px 4px 0">${g.desc}</p>
+    </div>
+
+    <div class="section-label">📑 표본별 감정 리뷰</div>
+    ${reviews}
+
+    <div class="section-label">📚 개념 한 줄 정리</div>
+    <div class="concept-grid">${concepts}</div>
+
+    <button class="btn primary" style="margin-top:20px" onclick="restart()">🔄 다시 감정하기</button>
+  </div>`;
+}
+
+/* ============================================================
+   [ 게임 로직 ] 섹션
+   ============================================================ */
+
+function startGame(){
+  state = {screen:'tutorial', index:0, tutStep:0, verdict:null, reasonSel:null, revealed:false, results:[]};
+  saveState(); render(); scrollTop();
+}
+
+function nextTutStep(){
+  state.tutStep++;
+  saveState(); render(); scrollTop();
+}
+
+function finishTutorial(){
+  state.screen='appraise';
+  state.index=1;              // 첫 본감정 표본 #1
+  state.verdict=null; state.reasonSel=null; state.revealed=false;
+  saveState(); render(); scrollTop();
+}
+
+function pickVerdict(v){
+  if(state.revealed) return;
+  state.verdict=v;
+  state.reasonSel=null; // 판정 바꾸면 근거 초기화
+  saveState(); render(); scrollTop(false);
+}
+
+function pickReason(i){
+  if(state.revealed) return;
+  state.reasonSel=i;
+  saveState(); render(); scrollTop(false);
+}
+
+function confirmAppraisal(){
+  const sp = SPECIMENS[state.index];
+  if(state.reasonSel===null) return;
+
+  const chosenReal = (state.verdict==='real');
+  const verdictOk = (chosenReal === sp.isReal);
+  const reasonOk = (state.reasonSel === sp.answer);
+
+  let points = PT_NONE;
+  if(verdictOk && reasonOk) points = PT_FULL;
+  else if(verdictOk)        points = PT_PART;
+
+  state.results.push({
+    id:sp.id, name:sp.name, isReal:sp.isReal,
+    verdictOk, reasonOk, points, chosenVerdict:state.verdict
+  });
+  state.revealed=true;
+  saveState();
+
+  // 진위 정답이면 도장 연출
+  if(verdictOk){
+    playStamp(sp.isReal);
+  }
+  render();
+  scrollToFeedback();
+}
+
+function nextSpecimen(){
+  if(state.index >= SPECIMENS.length-1){
+    state.screen='result';
+    saveState(); render(); scrollTop();
+    return;
+  }
+  state.index++;
+  state.verdict=null; state.reasonSel=null; state.revealed=false;
+  saveState(); render(); scrollTop();
+}
+
+function restart(){
+  clearState();
+  state = {screen:'intro', index:0, tutStep:0, verdict:null, reasonSel:null, revealed:false, results:[]};
+  render(); scrollTop();
+}
+
+/* ---------- 도장 연출 ---------- */
+function playStamp(isReal){
+  const fx = document.getElementById('stampFx');
+  const mark = document.getElementById('stampMark');
+  mark.textContent = isReal ? '진품 감정 완료' : '위조 적발';
+  mark.className = 'stamp-mark' + (isReal?'':' fake');
+  fx.style.display='flex';
+  // 리플로우 후 애니메이션 트리거
+  void mark.offsetWidth;
+  mark.classList.add('go');
+  setTimeout(()=>{
+    fx.style.display='none';
+    mark.classList.remove('go');
+  }, 950);
+}
+
+/* ---------- 규칙 모달 ---------- */
+function openRules(){ document.getElementById('rulesModal').classList.add('on'); }
+function closeRules(){ document.getElementById('rulesModal').classList.remove('on'); }
+
+/* ---------- 저장/복원 ---------- */
+function hasSave(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return false;
+    const s = JSON.parse(raw);
+    return s && s.screen && s.screen!=='intro';
+  }catch(e){ return false; }
+}
+function resumeGame(){
+  try{
+    const s = JSON.parse(localStorage.getItem(STORE_KEY));
+    if(s && s.screen){ state=s; render(); scrollTop(); }
+  }catch(e){}
+}
+
+/* ---------- 스크롤 헬퍼 ---------- */
+function scrollTop(force=true){
+  if(force) window.scrollTo({top:0, behavior:'instant' in window ? 'instant':'auto'});
+}
+function scrollToFeedback(){
+  setTimeout(()=>{
+    const fb = document.querySelector('.feedback');
+    if(fb) fb.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 60);
+}
+
+/* ---------- 시작 ---------- */
+render();
+</script>
+</body>
+</html>
