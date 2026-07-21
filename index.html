@@ -254,28 +254,72 @@ button{font-family:inherit;cursor:pointer;border:none;}
 
 @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 
-/* ---------- 도장 연출 ---------- */
+/* ---------- 도장/인장 연출 ---------- */
 .stamp-fx{
   position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
   pointer-events:none;
 }
-.stamp-mark{
-  font-family:'Nanum Pen Script',cursive;
-  border:6px solid var(--stamp);color:var(--stamp);
-  border-radius:14px;padding:14px 34px;font-size:2.6rem;font-weight:700;
-  transform:rotate(-14deg) scale(2.4);opacity:0;
-  background:rgba(244,234,213,.7);
-  letter-spacing:2px;
-  box-shadow:0 0 0 4px rgba(182,54,44,.25);
+.seal{
+  --seal:#b6362c;
+  font-family:'Gowun Batang',serif;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  width:150px;height:150px;border-radius:22px;
+  border:6px double var(--seal);color:var(--seal);
+  background:rgba(244,234,213,.74);
+  box-shadow:inset 0 0 0 2px var(--seal), 0 8px 22px rgba(0,0,0,.18);
+  transform:rotate(-12deg) scale(2.2);opacity:0;
 }
-.stamp-mark.fake{border-color:var(--stamp-deep);color:var(--stamp-deep);}
-.stamp-mark.go{animation:stamp .9s cubic-bezier(.2,1.2,.3,1) forwards;}
-@keyframes stamp{
-  0%{opacity:0;transform:rotate(-14deg) scale(2.6);}
-  35%{opacity:1;transform:rotate(-14deg) scale(1);}
-  70%{opacity:1;transform:rotate(-14deg) scale(1);}
-  100%{opacity:0;transform:rotate(-14deg) scale(1.05);}
+.seal .seal-main{font-size:3.1rem;font-weight:700;letter-spacing:5px;line-height:1;}
+.seal .seal-sub{font-family:'Nanum Pen Script',cursive;font-size:1.35rem;letter-spacing:1px;}
+.seal.real{--seal:#27496d;}   /* 남색 — 진품 인장 */
+.seal.fake{--seal:#b6362c;}   /* 붉은색 — 위조 도장 */
+.seal.go{animation:sealstamp .5s cubic-bezier(.2,1.4,.3,1) forwards;}
+@keyframes sealstamp{
+  0%{opacity:0;transform:rotate(-12deg) scale(2.4);}
+  38%{opacity:1;transform:rotate(-12deg) scale(1);}
+  78%{opacity:1;transform:rotate(-12deg) scale(1);}
+  100%{opacity:0;transform:rotate(-12deg) scale(1.05);}
 }
+
+/* ---------- 파트너 캐릭터 · 한 선생 대사창 ---------- */
+.mentor{
+  display:flex;gap:12px;align-items:flex-start;
+  background:var(--paper-2);
+  border:1px solid var(--line);border-left:5px solid var(--ink);
+  border-radius:10px;padding:12px 14px;margin:0 0 14px;
+  animation:fadein .3s ease;
+}
+.mentor.ok{border-left-color:var(--good);background:rgba(63,125,82,.09);}
+.mentor.no{border-left-color:var(--bad);background:rgba(182,54,44,.09);}
+.mentor.ending{border-left-color:var(--gold);background:rgba(169,133,47,.1);}
+.m-ava{flex:0 0 48px;width:48px;height:48px;border-radius:50%;overflow:hidden;
+  box-shadow:0 2px 6px var(--shadow);background:#d9c39a;}
+.m-ava svg{display:block;width:100%;height:100%;}
+.m-body{flex:1;min-width:0;}
+.m-name{font-family:'Nanum Pen Script',cursive;font-size:1.35rem;color:var(--ink);line-height:1;margin-bottom:3px;}
+.m-name .m-step{font-family:'Noto Sans KR',sans-serif;font-size:.72rem;color:var(--ink-soft);margin-left:6px;}
+.m-line{font-family:'Gowun Batang',serif;font-size:1rem;line-height:1.5;color:var(--ink);}
+.m-line b{color:var(--stamp-deep);}
+.mentor.ending .m-line{font-size:1.02rem;}
+
+/* 위조단 서사 한 줄 */
+.syndicate{
+  margin-top:10px;padding:8px 12px;border-radius:8px;
+  background:rgba(59,47,34,.08);border:1px dashed var(--ink-soft);
+  font-family:'Gowun Batang',serif;font-size:.94rem;color:var(--ink-soft);
+  display:flex;gap:8px;align-items:flex-start;
+}
+.syndicate .sy-ic{flex:0 0 auto;}
+
+/* 음소거 토글 버튼 */
+.sound-fab{
+  position:fixed;left:14px;bottom:14px;z-index:40;
+  width:46px;height:46px;padding:0;border-radius:50%;
+  background:var(--paper);color:var(--ink);font-size:1.15rem;
+  box-shadow:0 6px 16px var(--shadow);border:2px solid var(--ink);
+  display:flex;align-items:center;justify-content:center;
+}
+.sound-fab:active{transform:translateY(2px);}
 
 /* ---------- 인트로 ---------- */
 .intro-hero{text-align:center;padding:30px 16px 10px;}
@@ -381,6 +425,9 @@ button{font-family:inherit;cursor:pointer;border:none;}
 <!-- 규칙 보기 플로팅 버튼 (인트로 이후 표시) -->
 <button class="help-fab" id="helpFab" style="display:none" onclick="openRules()">📜 감정 규칙</button>
 
+<!-- 음소거 토글 버튼 -->
+<button class="sound-fab" id="soundFab" onclick="toggleMute()" aria-label="소리 켜기/끄기">🔊</button>
+
 <!-- 규칙 모달 -->
 <div class="modal-back" id="rulesModal" onclick="if(event.target===this)closeRules()">
   <div class="modal">
@@ -421,9 +468,12 @@ button{font-family:inherit;cursor:pointer;border:none;}
   </div>
 </div>
 
-<!-- 도장 연출 레이어 -->
+<!-- 도장/인장 연출 레이어 -->
 <div class="stamp-fx" id="stampFx" style="display:none">
-  <div class="stamp-mark" id="stampMark">진품 감정 완료</div>
+  <div class="seal real" id="stampMark">
+    <span class="seal-main">眞品</span>
+    <span class="seal-sub">진품 확정</span>
+  </div>
 </div>
 
 <script>
@@ -477,6 +527,15 @@ const SPECIMENS = [
       '방추충도 → <b>고생대</b>!',
       '시대가 서로 일치하네요. 둘 다 바다 생물이라 환경도 맞고요. <b>진품</b>입니다.'
     ],
+    // 한 선생의 튜토리얼 대사 (깐깐한 반말체) — tutorialSteps와 1:1 대응
+    mentorTutorial:[
+      '서두르지 마라. 먼저 표준화석으로 <b>시대</b>부터 읽어.',
+      '삼엽충 — <b>고생대</b>다. 이건 기본이지.',
+      '혼자 판단하지 마. 같은 지층 화석이 시대를 맞받아주는지 봐.',
+      '방추충도 <b>고생대</b>. 시대가 손을 맞잡았군.',
+      '시대도 환경도 어긋남이 없다. 모순이 없으면 <b>진품</b>이다.'
+    ],
+    mentorTutorialDone:'…첫 감정치곤 나쁘지 않아. 눈은 달려 있군. 이제 진짜를 보여줄 차례다.',
     feedbackOk:'좋아요! 삼엽충과 방추충 모두 고생대 표준화석이고, 둘 다 바다 생물이라 시대·환경이 서로 일치합니다. 모순이 없으니 진품이에요.'
   },
   {
@@ -499,6 +558,10 @@ const SPECIMENS = [
     answer:0,
     feedbackOk:'정확합니다. 공룡은 중생대, 화폐석은 신생대 표준화석이죠. 한 지층이 두 시대일 수 없으니 서류가 조작된 위조품입니다.',
     feedbackNo:'같은 지층에서 발견된 화석의 시대를 다시 보세요. 공룡(중생대)과 화폐석(신생대)이 같은 지층에 함께 있을 수 있을까요?',
+    syndicate:'화폐석을 슬쩍 끼워 시대를 속이려 했군. 위조단의 상투적인 수법이지.',
+    mentorHint:'\'완벽한 표본\'이라… 그 말이 제일 수상하다. 같은 지층에서 나온 화석의 시대를 맞춰봐.',
+    mentorCorrect:'…봐줄 만하군. 시대가 어긋난 걸 놓치지 않았어.',
+    mentorWrong:'성급했다. 공룡은 중생대, 화폐석은 신생대. 한 지층이 두 시대일 수는 없지.',
     review:'공룡=중생대 vs 화폐석=신생대. 표준화석끼리 시대 불일치 → 위조.'
   },
   {
@@ -521,6 +584,10 @@ const SPECIMENS = [
     answer:1,
     feedbackOk:'맞습니다. 산호는 바다, 고사리는 육지 시상화석입니다. 하나의 표본이 바다이면서 육지일 수는 없으니 조작된 위조품이에요.',
     feedbackNo:'두 시상화석이 각각 어떤 환경을 알려주는지 떠올려 보세요. 바다(산호)와 육지(고사리)가 한 표본에 공존할 수 있을까요?',
+    syndicate:'바다와 육지를 한 덩어리에 붙여 놓다니. 위조단의 손버릇이 그대로 보이는군.',
+    mentorHint:'바다라고 적어놨다고 바다인 줄 아나. 같이 나온 화석이 무슨 환경을 가리키는지 따져.',
+    mentorCorrect:'그래, 그거다. 바다와 육지가 한 덩어리에 있을 순 없지.',
+    mentorWrong:'눈을 어디 둔 게냐. 산호는 바다, 고사리는 육지다. 환경이 서로 엇갈렸어.',
     review:'산호=바다 vs 고사리=육지. 시상화석 환경 모순 → 위조.'
   },
   {
@@ -545,6 +612,9 @@ const SPECIMENS = [
     answer:2,
     feedbackOk:'훌륭한 감정입니다! 이건 함정이었어요. 바다에서 만들어진 지층이 융기하면 암모나이트가 산꼭대기에서도 나올 수 있습니다. 실제 히말라야의 사례죠. 진품입니다.',
     feedbackNo:'성급했어요. 바다 생물이 산에서 나온다고 무조건 위조는 아닙니다. \'융기\'를 떠올려 보세요 — 히말라야, 태백의 사례처럼요.',
+    mentorHint:'제보가 시끄럽군. 허나 제보에 휘둘리면 감정사가 아니다. 산으로 솟은 바다를 떠올려.',
+    mentorCorrect:'…제법이야. 융기를 읽어냈군. 남들은 여기서 다 넘어진다.',
+    mentorWrong:'제보에 넘어갔군. 바다가 산이 되는 이치 — 융기를 잊었나. 히말라야를 떠올려.',
     review:'융기로 설명됨. 바다 지층이 솟아 산이 됨(히말라야 사례) → 진품. 제보가 함정.'
   },
   {
@@ -566,9 +636,52 @@ const SPECIMENS = [
     answer:2,
     feedbackOk:'날카롭네요. 표준화석은 오히려 넓은 지역에 분포해야 시대를 판별하는 기준이 됩니다. \'좁은 지역에서만\'이라는 설명 자체가 표준화석의 조건을 위반한 조작이에요.',
     feedbackNo:'표준화석의 \'조건\'을 다시 보세요. 분포 면적이 넓어야 할까요, 좁아야 할까요? 판매자의 설명이 그 조건과 맞는지 따져보세요.',
+    syndicate:'그럴듯한 말로 조건을 뒤집는다 — 위조단이 즐겨 쓰는 말장난이다.',
+    mentorHint:'말이 그럴듯할수록 논리를 뜯어봐라. 표준화석의 \'조건\'을 되새겨.',
+    mentorCorrect:'날카롭군. \'좁은 지역에서만\'이라는 말이 제 발로 정체를 드러냈지.',
+    mentorWrong:'속았군. 표준화석은 넓게 퍼져야 기준이 된다. \'좁은 지역\'이라는 말 자체가 조작이야.',
     review:'표준화석은 넓은 분포가 조건. "좁은 지역에서만"은 조건 위반 → 위조.'
   }
 ];
+
+/* ---------- 파트너 캐릭터 · 한(韓) 선생 ---------- */
+// 아바타: 인라인 SVG 실루엣 (외부 이미지 없음). 단호한 노감정사 — 백발·콧수염·단안경.
+const MENTOR = {
+  name:'한(韓) 선생',
+  avatar:`<svg viewBox="0 0 64 64" role="img" aria-label="한 선생">
+    <circle cx="32" cy="32" r="32" fill="#d9c39a"/>
+    <path d="M11 62 Q11 45 32 45 Q53 45 53 62 Z" fill="#5c4c38"/>
+    <path d="M22 60 L32 47 L42 60 Z" fill="#efe2c6"/>
+    <circle cx="32" cy="27" r="13" fill="#ecd9b6"/>
+    <path d="M18 26 Q18 12 32 12 Q46 12 46 26 Q42 21 36 20 Q34 22 32 22 Q30 22 28 20 Q22 21 18 26Z" fill="#b7a888"/>
+    <rect x="23" y="25" width="6" height="2" rx="1" fill="#6b5a44"/>
+    <rect x="35" y="25" width="6" height="2" rx="1" fill="#6b5a44"/>
+    <circle cx="26" cy="29" r="1.6" fill="#3b2f22"/>
+    <circle cx="38" cy="29" r="1.6" fill="#3b2f22"/>
+    <circle cx="38" cy="29" r="4.4" fill="none" stroke="#a9852f" stroke-width="1.1"/>
+    <path d="M38 33 L41 44" stroke="#a9852f" stroke-width="1" fill="none"/>
+    <path d="M25 35 Q32 39 39 35 Q34 34 32 35 Q30 34 25 35Z" fill="#b7a888"/>
+  </svg>`
+};
+
+// 결과 마무리 서사 (정확도별). 클라이맥스 한 문단.
+function endingFor(count){
+  if(count>=5) return '한 선생이 처음으로 옅게 웃었다. "…이제 자네에게 맡겨도 되겠군." 위조단은 이번 판을 잃었다. 허나 그들은 반드시 다시 온다. 다음 컬렉션엔 더 정교한 가짜가 섞여 올 것이다. — 자네의 진짜 감정은, 지금부터다.';
+  if(count>=3) return '한 선생은 말없이 고개를 끄덕였다. "쓸 만해. 허나 위조단은 자네의 빈틈을 노린다." 아직 놓친 단서가 있다. 다음 대결 전에, 감정의 눈을 더 벼려 두어라.';
+  return '한 선생이 서류를 덮으며 한숨을 쉬었다. "…아직 이르군." 위조단의 가짜에 몇 번이나 속았다. 규칙을 다시 새기고, 눈을 벼려 다시 오게.';
+}
+
+// 한 선생 대사창 (말풍선)
+function mentorBox(line, mood, stepLabel){
+  return `
+  <div class="mentor ${mood||''}">
+    <div class="m-ava">${MENTOR.avatar}</div>
+    <div class="m-body">
+      <div class="m-name">${MENTOR.name}${stepLabel?`<span class="m-step">${stepLabel}</span>`:''}</div>
+      <div class="m-line">${line}</div>
+    </div>
+  </div>`;
+}
 
 // 결과 개념 정리 카드 5개
 const CONCEPTS = [
@@ -641,19 +754,22 @@ function renderIntro(){
   app.innerHTML = `
   <div class="folder card">
     <div class="intro-hero">
-      <div class="kicker">긴급 감정 의뢰</div>
+      <div class="kicker">한 선생의 마지막 시험</div>
       <h1>위조 화석 <span class="em">스캔들</span></h1>
       <p class="hand" style="font-size:1.5rem;color:var(--ink-soft);margin:2px 0 0">— 화석 감정 미스터리 —</p>
     </div>
 
     <div class="brief">
-      <p class="lead">당신은 화석 <b>감정사</b>입니다.</p>
-      <p>곧 경매에 오를 화석 컬렉션이 도착했습니다. 그런데 <b>그중 위조품이 섞여 있다</b>는 제보가 들어왔습니다.</p>
-      <p>각 표본에 붙은 감정 서류 — <b>발굴 지층·같은 지층에서 발견된 화석·퇴적 당시 환경·판매자 주장</b> — 을 읽고, 교과 개념(<b>표준화석·시상화석·융기</b>)으로 진품과 위조품을 가려내세요.</p>
+      <p class="lead">전설의 화석 감정사, <b>한(韓) 선생</b>이 은퇴를 앞두고 있습니다.</p>
+      <p>그는 자신의 후임으로 <b>당신</b> — 견습 감정사를 지목했습니다.</p>
+      <p>하지만 최근 경매 시장엔 정교한 <b>위조 화석</b>을 흘리는 <b>위조단</b>이 활개를 칩니다. 이번에 도착한 컬렉션에도 <b>그들의 작품이 섞여 있다</b>는 제보가 들어왔습니다.</p>
+      <p>한 선생의 <b>마지막 시험</b>이자, 위조단과의 <b>첫 대결</b>. 감정 서류(<b>발굴 지층·같은 지층 화석·퇴적 당시 환경·판매자 주장</b>)를 읽고, 교과 개념(<b>표준화석·시상화석·융기</b>)으로 진품과 위조를 가려내세요.</p>
       <p class="center hand" style="font-size:1.6rem;color:var(--stamp);margin-top:14px">
-        경매 출품 화석 5점 중 위조품이 있다.<br>당신의 감정을 시작하라.
+        경매 출품 화석 5점 중 위조가 숨어 있다.<br>당신의 감정을 시작하라.
       </p>
     </div>
+
+    ${mentorBox('눈으로만 보지 마라. 서류를 읽고, 화석에게 시대와 환경을 물어. …시작하지.','hint')}
 
     <div class="tag-list">
       <span class="tag">🔍 표본 5점</span>
@@ -711,15 +827,14 @@ function renderTutorial(){
   const step = state.tutStep;
   const done = step >= totalSteps;
 
+  // 한 선생이 단계별로 감정 절차를 짚어준다 (반말·깐깐한 어조)
   const bubble = done
-    ? `<div class="feedback ok">
+    ? mentorBox(sp.mentorTutorialDone,'ok') +
+      `<div class="feedback ok">
          <div class="fb-tag">✅ 감정 완료 — 진품</div>
          <div class="fb-body">${sp.feedbackOk}</div>
        </div>`
-    : `<div class="feedback">
-         <div class="fb-tag">🗣️ 감정 안내 (${step+1}/${totalSteps})</div>
-         <div class="fb-body hand" style="font-size:1.35rem;color:var(--stamp-deep)">${sp.tutorialSteps[step]}</div>
-       </div>`;
+    : mentorBox(sp.mentorTutorial[step],'', `단계 ${step+1}/${totalSteps}`);
 
   const btn = done
     ? `<button class="btn primary" onclick="finishTutorial()">본 감정 시작 →</button>`
@@ -729,8 +844,8 @@ function renderTutorial(){
   ${topbar('튜토리얼', '연습', 8)}
   <div class="folder card">
     ${docCard(sp)}
-    <div style="margin-top:14px;padding:10px 12px;border-radius:8px;background:var(--paper-2);border:1px dashed var(--line);font-size:.9rem" class="muted">
-      💡 튜토리얼입니다. 감정하는 법을 단계별로 익혀보세요. 언제든 우측 하단 <b>📜 감정 규칙</b>을 열 수 있어요.
+    <div style="margin:14px 0;padding:10px 12px;border-radius:8px;background:var(--paper-2);border:1px dashed var(--line);font-size:.9rem" class="muted">
+      💡 튜토리얼입니다. 한 선생의 안내를 따라 감정법을 익혀보세요. 언제든 우측 하단 <b>📜 감정 규칙</b>을 열 수 있어요.
     </div>
     ${bubble}
     <div style="margin-top:14px">${btn}</div>
@@ -787,11 +902,16 @@ function renderAppraise(){
       : sp.feedbackNo;
     const earn = `+${r.points}점 획득 (${r.verdictOk? (r.reasonOk?'만점':'부분점수'):'0점'})`;
     const isLast = (state.index >= SPECIMENS.length-1);
+    // 위조 표본의 정답 해설 끝에 위조단 수법 한 줄 (진품 표본에는 없음)
+    const syndicateHtml = sp.syndicate
+      ? `<div class="syndicate"><span class="sy-ic">🕵️</span><span><b>위조단의 흔적</b> — ${sp.syndicate}</span></div>`
+      : '';
     panel += `
     <div class="feedback ${cls}">
       <div class="fb-tag">${tag}</div>
       <div class="fb-body">${body}</div>
       ${!r.verdictOk && r.reasonOk===false && sp.feedbackOk ? `<div class="fb-body" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)"><b>정답 해설:</b> ${sp.feedbackOk}</div>`:''}
+      ${syndicateHtml}
       <div class="fb-earn">${earn}</div>
     </div>
     <div class="btn-row">
@@ -799,9 +919,20 @@ function renderAppraise(){
     </div>`;
   }
 
+  // 한 선생 대사: 표본 진입 시 힌트/압박, 확정 후엔 정답·오답 리액션
+  let mentorHtml = '';
+  if(!state.revealed){
+    if(sp.mentorHint) mentorHtml = mentorBox(sp.mentorHint,'hint');
+  } else {
+    const rr = state.results[state.results.length-1];
+    const line = rr.verdictOk ? sp.mentorCorrect : sp.mentorWrong;
+    if(line) mentorHtml = mentorBox(line, rr.verdictOk?'ok':'no');
+  }
+
   app.innerHTML = `
   ${topbar('감정 '+posNow+'/4', '위조를 찾아라', pctClamped)}
   <div class="folder card">
+    ${mentorHtml}
     ${docCard(sp)}
     ${panel}
   </div>`;
@@ -858,6 +989,9 @@ function renderResult(){
     <div class="section-label">📚 개념 한 줄 정리</div>
     <div class="concept-grid">${concepts}</div>
 
+    <div class="section-label">🗝️ 한 선생의 마지막 말</div>
+    ${mentorBox(endingFor(gradeCount),'ending')}
+
     <button class="btn primary" style="margin-top:20px" onclick="restart()">🔄 다시 감정하기</button>
   </div>`;
 }
@@ -868,19 +1002,19 @@ function renderResult(){
 
 function startGame(){
   state = {screen:'tutorial', index:0, tutStep:0, verdict:null, reasonSel:null, revealed:false, results:[]};
-  saveState(); render(); scrollTop();
+  sndFlip(); saveState(); render(); scrollTop();
 }
 
 function nextTutStep(){
   state.tutStep++;
-  saveState(); render(); scrollTop();
+  sndFlip(); saveState(); render(); scrollTop();
 }
 
 function finishTutorial(){
   state.screen='appraise';
   state.index=1;              // 첫 본감정 표본 #1
   state.verdict=null; state.reasonSel=null; state.revealed=false;
-  saveState(); render(); scrollTop();
+  sndFlip(); saveState(); render(); scrollTop();
 }
 
 function pickVerdict(v){
@@ -915,15 +1049,19 @@ function confirmAppraisal(){
   state.revealed=true;
   saveState();
 
-  // 진위 정답이면 도장 연출
+  // 진위 정답이면 인장 연출 + 확인음, 오답이면 둔탁음
   if(verdictOk){
     playStamp(sp.isReal);
+    sndCorrect();
+  } else {
+    sndWrong();
   }
   render();
   scrollToFeedback();
 }
 
 function nextSpecimen(){
+  sndFlip();
   if(state.index >= SPECIMENS.length-1){
     state.screen='result';
     saveState(); render(); scrollTop();
@@ -940,20 +1078,82 @@ function restart(){
   render(); scrollTop();
 }
 
-/* ---------- 도장 연출 ---------- */
+/* ============================================================
+   [ 시청각 연출 ] 섹션 — 도장/인장 + Web Audio 효과음
+   ============================================================ */
+
+/* ---------- 도장/인장 연출 (진품=남색 眞品 / 위조=붉은 僞造) ---------- */
 function playStamp(isReal){
   const fx = document.getElementById('stampFx');
-  const mark = document.getElementById('stampMark');
-  mark.textContent = isReal ? '진품 감정 완료' : '위조 적발';
-  mark.className = 'stamp-mark' + (isReal?'':' fake');
+  const seal = document.getElementById('stampMark');
+  seal.className = 'seal ' + (isReal?'real':'fake');
+  seal.querySelector('.seal-main').textContent = isReal ? '眞品' : '僞造';
+  seal.querySelector('.seal-sub').textContent = isReal ? '진품 확정' : '위조 적발';
   fx.style.display='flex';
-  // 리플로우 후 애니메이션 트리거
-  void mark.offsetWidth;
-  mark.classList.add('go');
+  void seal.offsetWidth;             // 리플로우 후 애니메이션 트리거
+  seal.classList.add('go');
+  sndStamp();
   setTimeout(()=>{
     fx.style.display='none';
-    mark.classList.remove('go');
-  }, 950);
+    seal.classList.remove('go');
+  }, 560);
+}
+
+/* ---------- 효과음 (Web Audio API로 생성 · 외부 파일 없음) ---------- */
+let audioCtx = null;
+let muted = (function(){ try{ return localStorage.getItem('fossil_muted')==='1'; }catch(e){ return false; } })();
+
+function ac(){
+  if(!audioCtx){
+    try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ audioCtx=null; }
+  }
+  if(audioCtx && audioCtx.state==='suspended') audioCtx.resume();
+  return audioCtx;
+}
+function tone({freq=440, slideTo=null, dur=.12, type='sine', gain=.15, delay=0}){
+  if(muted) return;
+  const c = ac(); if(!c) return;
+  const t0 = c.currentTime + delay;
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t0);
+  if(slideTo) o.frequency.linearRampToValueAtTime(slideTo, t0+dur);
+  g.gain.setValueAtTime(gain, t0);
+  g.gain.exponentialRampToValueAtTime(.0001, t0+dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(t0); o.stop(t0+dur+.02);
+}
+function noiseBurst({dur=.15, gain=.22, lp=900}={}){
+  if(muted) return;
+  const c = ac(); if(!c) return;
+  const n = Math.floor(c.sampleRate*dur);
+  const buf = c.createBuffer(1, n, c.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<n;i++){ d[i] = (Math.random()*2-1) * (1 - i/n); }
+  const src = c.createBufferSource(); src.buffer = buf;
+  const filt = c.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value = lp;
+  const g = c.createGain(); g.gain.value = gain;
+  src.connect(filt); filt.connect(g); g.connect(c.destination);
+  src.start();
+}
+// 도장이 쾅 — 둔탁한 저음 + 노이즈
+function sndStamp(){ noiseBurst({dur:.16, gain:.28, lp:700}); tone({freq:170, slideTo:70, dur:.16, type:'square', gain:.22}); }
+// 서류/카드 넘기기 — 짧고 가벼운 스침
+function sndFlip(){ noiseBurst({dur:.09, gain:.10, lp:2600}); tone({freq:1200, slideTo:1700, dur:.05, type:'triangle', gain:.05}); }
+// 정답 — 낮고 차분한 확인음(2음 상승)
+function sndCorrect(){ tone({freq:392, dur:.12, type:'sine', gain:.16}); tone({freq:587, dur:.16, type:'sine', gain:.16, delay:.11}); }
+// 오답 — 둔탁한 음
+function sndWrong(){ tone({freq:150, slideTo:90, dur:.28, type:'sawtooth', gain:.16}); }
+
+/* ---------- 음소거 토글 ---------- */
+function toggleMute(){
+  muted = !muted;
+  try{ localStorage.setItem('fossil_muted', muted?'1':'0'); }catch(e){}
+  updateMuteIcon();
+  if(!muted) sndFlip(); // 켤 때 짧은 확인음
+}
+function updateMuteIcon(){
+  const b = document.getElementById('soundFab');
+  if(b){ b.textContent = muted ? '🔇' : '🔊'; b.setAttribute('aria-label', muted?'소리 켜기':'소리 끄기'); }
 }
 
 /* ---------- 항목 설명 툴팁 (모바일 탭 토글) ---------- */
@@ -1000,6 +1200,7 @@ function scrollToFeedback(){
 }
 
 /* ---------- 시작 ---------- */
+updateMuteIcon();
 render();
 </script>
 </body>
