@@ -502,6 +502,98 @@ button{font-family:inherit;cursor:pointer;border:none;}
 .obs-ctrl{display:flex;gap:10px;margin-bottom:10px;}
 .obs-ctrl .btn{flex:1;}
 
+/* ---------- 수사 보드 ---------- */
+.board-fab{
+  position:fixed;right:14px;bottom:64px;z-index:40;
+  width:auto;padding:12px 16px;border-radius:30px;
+  background:var(--stamp);color:#fff8ee;font-weight:700;font-size:.9rem;
+  box-shadow:0 6px 16px var(--shadow);border:2px solid var(--stamp-deep);
+  display:none;align-items:center;gap:6px;
+}
+.board-fab:active{transform:translateY(2px);}
+.board-modal{max-width:600px;}
+.board{
+  background:
+    repeating-linear-gradient(45deg, rgba(120,80,40,.04) 0 6px, transparent 6px 12px),
+    #cdb083;
+  border:1px solid #9c7d4e;border-radius:10px;padding:14px 12px;
+  box-shadow:inset 0 0 30px rgba(80,50,20,.25);
+}
+.board-sec-title{
+  font-family:'Nanum Pen Script',cursive;font-size:1.35rem;color:#fff8ee;
+  text-shadow:0 1px 3px rgba(0,0,0,.35);margin:4px 0 8px;display:flex;align-items:center;gap:6px;
+}
+.board-sec + .board-sec{margin-top:16px;}
+.board-empty{color:#5c4426;font-size:.9rem;font-style:italic;padding:6px 2px;}
+
+/* 위조단 네트워크: 붉은 실 스파인으로 카드 연결 */
+.board-net{position:relative;padding-left:20px;}
+.board-net::before{
+  content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+  background:repeating-linear-gradient(180deg,var(--stamp) 0 7px,transparent 7px 13px);
+}
+.board-net .board-card{margin-bottom:10px;}
+.board-net .board-card::before{
+  content:"";position:absolute;left:-17px;top:22px;width:12px;height:2px;background:var(--stamp);
+}
+.board-net .board-card::after{
+  content:"";position:absolute;left:-21px;top:18px;width:9px;height:9px;border-radius:50%;
+  background:var(--stamp);box-shadow:0 0 0 2px #cdb083;
+}
+.board-card{
+  position:relative;background:var(--paper);border-radius:8px;padding:10px 12px;
+  box-shadow:0 3px 8px rgba(60,40,20,.3);border:1px solid var(--line);
+  transform:rotate(-.6deg);
+}
+.board-card:nth-child(even){transform:rotate(.7deg);}
+.board-card.bc-real{border-left:5px solid #27496d;}
+.board-card.bc-fake{border-left:5px solid var(--stamp);}
+/* 압정 */
+.board-card .pin{
+  position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, #ffd9a0, #b6362c 70%);
+  box-shadow:0 2px 3px rgba(0,0,0,.35);
+}
+.bc-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.bc-icon{font-size:1.15rem;}
+.bc-name{font-weight:700;font-size:.98rem;}
+.bc-stamp{
+  margin-left:auto;font-family:'Gowun Batang',serif;font-weight:700;font-size:.82rem;
+  padding:2px 9px;border-radius:6px;border:2px solid;transform:rotate(-4deg);
+}
+.bc-stamp.st-real{color:#27496d;border-color:#27496d;background:rgba(39,73,109,.08);}
+.bc-stamp.st-fake{color:var(--stamp);border-color:var(--stamp);background:rgba(182,54,44,.08);}
+.bc-trick{font-size:.82rem;color:var(--stamp-deep);font-weight:700;margin-top:5px;}
+.bc-reason{font-size:.86rem;color:var(--ink-soft);margin-top:4px;line-height:1.45;}
+.bc-verdict{font-size:.78rem;margin-top:5px;font-weight:700;}
+.bc-verdict.ok{color:var(--good);}
+.bc-verdict.no{color:var(--bad);}
+.board-complete{
+  margin-top:12px;padding:11px 13px;border-radius:8px;text-align:center;
+  background:rgba(182,54,44,.14);border:2px dashed var(--stamp);
+  color:var(--stamp-deep);font-weight:700;font-size:.92rem;
+}
+.board-complete .bc-tricks{font-family:'Nanum Pen Script',cursive;font-size:1.3rem;margin-top:3px;color:var(--stamp);}
+
+/* ---------- 엔딩 엠블럼 ---------- */
+.ending-emblem{
+  text-align:center;border-radius:14px;padding:18px 14px;margin-bottom:6px;
+  border:3px solid var(--ink-soft);background:var(--paper-2);
+  animation:sealstamp .5s cubic-bezier(.2,1.4,.3,1);
+}
+.ending-emblem .ee-emoji{font-size:2.8rem;line-height:1;}
+.ending-emblem .ee-title{font-family:'Gowun Batang',serif;font-size:1.9rem;font-weight:700;margin-top:4px;}
+.ending-emblem .ee-sub{font-size:.9rem;margin-top:4px;}
+.ending-emblem.end-legend{border-color:#a9852f;background:linear-gradient(180deg,rgba(169,133,47,.16),rgba(39,73,109,.1));}
+.ending-emblem.end-legend .ee-title{color:#8a6d1f;}
+.ending-emblem.end-official{border-color:var(--good);background:rgba(63,125,82,.12);}
+.ending-emblem.end-official .ee-title{color:var(--good);}
+.ending-emblem.end-trainee{border-color:var(--gold);background:rgba(169,133,47,.12);}
+.ending-emblem.end-trainee .ee-title{color:var(--gold);}
+.ending-emblem.end-bad{border-color:var(--bad);background:rgba(182,54,44,.13);}
+.ending-emblem.end-bad .ee-title{color:var(--stamp-deep);}
+
 /* ---------- 결과 리포트 ---------- */
 .result-hero{text-align:center;padding:10px 0 4px;}
 .result-hero .grade{
@@ -555,6 +647,19 @@ button{font-family:inherit;cursor:pointer;border:none;}
 
 <!-- 음소거 토글 버튼 -->
 <button class="sound-fab" id="soundFab" onclick="toggleMute()" aria-label="소리 켜기/끄기">🔊</button>
+
+<!-- 수사 보드 열기 버튼 (감정 시작 후 표시) -->
+<button class="board-fab" id="boardFab" onclick="openBoard()">🕵️ 수사 보드</button>
+
+<!-- 수사 보드 모달 -->
+<div class="modal-back" id="boardModal" onclick="if(event.target===this)closeBoard()">
+  <div class="modal board-modal">
+    <h2>🕵️ 수사 보드</h2>
+    <p class="muted" style="font-size:.88rem;margin:2px 0 10px">감정을 마친 표본이 하나씩 꽂힙니다. 위조단의 수법이 붉은 실로 이어집니다.</p>
+    <div id="boardBody"></div>
+    <button class="btn primary" style="margin-top:14px" onclick="closeBoard()">닫기</button>
+  </div>
+</div>
 
 <!-- 규칙 모달 -->
 <div class="modal-back" id="rulesModal" onclick="if(event.target===this)closeRules()">
@@ -728,7 +833,8 @@ const SPECIMENS = [
       '시대도 환경도 어긋남이 없다. 모순이 없으면 <b>진품</b>이다.'
     ],
     mentorTutorialDone:'…첫 감정치곤 나쁘지 않아. 눈은 달려 있군. 이제 진짜를 보여줄 차례다.',
-    feedbackOk:'좋아요! 삼엽충과 방추충 모두 고생대 표준화석이고, 둘 다 바다 생물이라 시대·환경이 서로 일치합니다. 모순이 없으니 진품이에요.'
+    feedbackOk:'좋아요! 삼엽충과 방추충 모두 고생대 표준화석이고, 둘 다 바다 생물이라 시대·환경이 서로 일치합니다. 모순이 없으니 진품이에요.',
+    review:'삼엽충·방추충 모두 고생대·바다 → 시대·환경 일치. 모순 없음 → 진품(연습).'
   },
   {
     id:1,
@@ -751,6 +857,7 @@ const SPECIMENS = [
     feedbackOk:'정확합니다. 공룡은 중생대, 화폐석은 신생대 표준화석이죠. 한 지층이 두 시대일 수 없으니 서류가 조작된 위조품입니다.',
     feedbackNo:'같은 지층에서 발견된 화석의 시대를 다시 보세요. 공룡(중생대)과 화폐석(신생대)이 같은 지층에 함께 있을 수 있을까요?',
     syndicate:'화폐석을 슬쩍 끼워 시대를 속이려 했군. 위조단의 상투적인 수법이지.',
+    trick:'시대 속임',
     mentorHint:'\'완벽한 표본\'이라… 그 말이 제일 수상하다. 같은 지층에서 나온 화석의 시대를 맞춰봐.',
     mentorCorrect:'…봐줄 만하군. 시대가 어긋난 걸 놓치지 않았어.',
     mentorWrong:'성급했다. 공룡은 중생대, 화폐석은 신생대. 한 지층이 두 시대일 수는 없지.',
@@ -777,6 +884,7 @@ const SPECIMENS = [
     feedbackOk:'맞습니다. 산호는 바다, 고사리는 육지 시상화석입니다. 하나의 표본이 바다이면서 육지일 수는 없으니 조작된 위조품이에요.',
     feedbackNo:'두 시상화석이 각각 어떤 환경을 알려주는지 떠올려 보세요. 바다(산호)와 육지(고사리)가 한 표본에 공존할 수 있을까요?',
     syndicate:'바다와 육지를 한 덩어리에 붙여 놓다니. 위조단의 손버릇이 그대로 보이는군.',
+    trick:'환경 속임',
     mentorHint:'바다라고 적어놨다고 바다인 줄 아나. 같이 나온 화석이 무슨 환경을 가리키는지 따져.',
     mentorCorrect:'그래, 그거다. 바다와 육지가 한 덩어리에 있을 순 없지.',
     mentorWrong:'눈을 어디 둔 게냐. 산호는 바다, 고사리는 육지다. 환경이 서로 엇갈렸어.',
@@ -829,6 +937,7 @@ const SPECIMENS = [
     feedbackOk:'날카롭네요. 표준화석은 오히려 넓은 지역에 분포해야 시대를 판별하는 기준이 됩니다. \'좁은 지역에서만\'이라는 설명 자체가 표준화석의 조건을 위반한 조작이에요.',
     feedbackNo:'표준화석의 \'조건\'을 다시 보세요. 분포 면적이 넓어야 할까요, 좁아야 할까요? 판매자의 설명이 그 조건과 맞는지 따져보세요.',
     syndicate:'그럴듯한 말로 조건을 뒤집는다 — 위조단이 즐겨 쓰는 말장난이다.',
+    trick:'표준화석 조건 속임',
     mentorHint:'말이 그럴듯할수록 논리를 뜯어봐라. 표준화석의 \'조건\'을 되새겨.',
     mentorCorrect:'날카롭군. \'좁은 지역에서만\'이라는 말이 제 발로 정체를 드러냈지.',
     mentorWrong:'속았군. 표준화석은 넓게 퍼져야 기준이 된다. \'좁은 지역\'이라는 말 자체가 조작이야.',
@@ -884,11 +993,63 @@ const CONCEPTS = [
   {n:'⑤', t:'<b>융기</b> — 바다 지층이 솟으면 바다 화석이 산에서도 나온다(히말라야·태백). 모순 아님!'}
 ];
 
-// 등급 판정 (맞힌 표본 수 = 진위 정답 수, 튜토리얼 제외 5점 만점 아님 → 총 5표본 기준)
-function gradeFor(correctCount){
-  if(correctCount>=5) return {title:'수석 감정사', emoji:'🏅', desc:'완벽한 눈썰미! 위조의 흔적 하나 놓치지 않았습니다.'};
-  if(correctCount>=3) return {title:'정식 감정사', emoji:'🔎', desc:'믿을 만한 감정 실력입니다. 몇 가지 단서만 더 챙기면 완벽해요.'};
-  return {title:'수습 감정사', emoji:'📖', desc:'규칙 카드를 다시 익히고 재도전해 보세요. 다음엔 분명 더 날카로워집니다.'};
+// 한 판에 출제할 본감정 표본 수(튜토리얼 제외). 표본 풀을 늘리면 이 값만큼 무작위로 뽑음.
+const ROUND_SIZE = 4;
+
+// 정확도+신뢰도 종합 엔딩 분기. 각 엔딩: 칭호·이모지·톤(색감)·한 선생 한 문단.
+const ENDINGS = {
+  legend:{
+    key:'legend', title:'전설의 화석 감정사', emoji:'🏆', tone:'end-legend',
+    sub:'완벽한 감정 — 위조단의 모든 수법을 꿰뚫었다.',
+    mentor:'한 선생이 도장을 내려놓고, 처음으로 자네에게 손을 내밀었다. "…이제 이 자리의 주인은 자네다." 위조단의 세 가지 수법을 하나도 놓치지 않은 눈. 그가 조용히 덧붙였다. "다음 컬렉션에도 그들의 그림자가 있다 — 이번엔 함께 쫓지." 전설의 감정사가, 여기서 태어났다.'
+  },
+  official:{
+    key:'official', title:'정식 감정사', emoji:'🔎', tone:'end-official',
+    sub:'믿을 만한 감정 실력 — 정식 감정사로 인정.',
+    mentor:'한 선생이 고개를 끄덕였다. "합격이다. 자네를 정식 감정사로 인정하지." 다만 그는 놓친 단서 한둘을 짚으며 덧붙였다. "완벽하진 않았어. 위조단은 그 빈틈을 노린다 — 방심하지 마라."'
+  },
+  trainee:{
+    key:'trainee', title:'수습 감정사', emoji:'📖', tone:'end-trainee',
+    sub:'위조품 일부가 경매로 넘어갔다 — 아직은 수습.',
+    mentor:'한 선생이 씁쓸하게 서류를 덮었다. "…위조품 몇 점이 그대로 경매에 넘어갔다." 가짜가 진품의 이름으로 팔려나간 것이다. "아직은 수습이다. 규칙을 다시 새기고, 눈을 벼려 다시 오게 — 기회는 또 있다."'
+  },
+  bad:{
+    key:'bad', title:'위조단에 속은 견습생', emoji:'⚠️', tone:'end-bad',
+    sub:'위조단이 활개 친다 — 가짜가 시장을 휩쓸었다.',
+    mentor:'한 선생이 말없이 등을 돌렸다. "…위조단이 오늘 밤 축배를 들겠군." 가짜들이 진품으로 둔갑해 시장을 휩쓸었다. 그의 마지막 말은 짧고 서늘했다. "감정사의 도장은 곧 진실이다. 그 무게를 모른다면 — 아직 이 자리에 설 수 없어."'
+  }
+};
+
+// 정확도+신뢰도 종합 → 엔딩 결정
+function decideEnding(){
+  const R = state.results;
+  const n = R.length || 1;
+  const verdictOk   = R.filter(r=>r.verdictOk).length;
+  const fullOk      = R.filter(r=>r.verdictOk && r.reasonOk).length;
+  const fakesMissed = R.filter(r=>!r.isReal && !r.verdictOk).length; // 놓친 위조품 수
+  const trust = state.trust;
+  let key;
+  if(fakesMissed>=2 || trust<40)      key='bad';      // 위조 다수 놓침 / 신뢰도 위태
+  else if(fullOk===n)                 key='legend';   // 전 표본 완벽(진위+근거)
+  else if(verdictOk>=n-1)             key='official';  // 대부분 정답
+  else                                key='trainee';  // 절반 내외
+  return Object.assign({}, ENDINGS[key], {verdictOk, fullOk, fakesMissed, trust, n});
+}
+
+// Fisher-Yates 셔플 (원본 불변)
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    const t=a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+}
+// 출제 순서 생성: 튜토리얼(#0) 항상 맨 앞 고정 + 나머지 표본 셔플 후 ROUND_SIZE개
+function buildOrder(){
+  const tutorialIdx = SPECIMENS.findIndex(s=>s.tutorial);
+  const rest = SPECIMENS.map((s,i)=>i).filter(i=>!SPECIMENS[i].tutorial);
+  return [tutorialIdx].concat(shuffle(rest).slice(0, ROUND_SIZE));
 }
 
 /* ============================================================
@@ -901,7 +1062,9 @@ const STORE_KEY = 'fossil_scandal_v1';
 
 let state = {
   screen:'intro',      // intro | tutorial | appraise | result
-  index:0,             // SPECIMENS 인덱스
+  order:[0,1,2,3,4],   // 출제 순서(SPECIMENS 인덱스 배열). 튜토리얼 항상 맨 앞
+  pos:0,               // order 상의 현재 위치 (0=튜토리얼, 1..ROUND_SIZE=본감정)
+  index:0,             // 현재 SPECIMENS 인덱스 (= order[pos])
   tutStep:0,           // 튜토리얼 말풍선 단계
   verdict:null,        // 'real' | 'fake'
   reasonSel:null,      // 선택한 근거 index
@@ -917,6 +1080,13 @@ function normalizeState(){
   if(typeof state.trust!=='number') state.trust=100;
   if(typeof state.magnify!=='boolean') state.magnify=false;
   if(!Array.isArray(state.inspected)) state.inspected=[];
+  if(!Array.isArray(state.order) || !state.order.length){
+    state.order = SPECIMENS.map((s,i)=>i);   // 구버전 저장 호환: 자연 순서
+  }
+  if(typeof state.pos!=='number'){
+    const p = state.order.indexOf(state.index);
+    state.pos = p>=0 ? p : 0;
+  }
 }
 
 function saveState(){
@@ -932,15 +1102,86 @@ function clearState(){
 
 const app = document.getElementById('app');
 const helpFab = document.getElementById('helpFab');
+const boardFab = document.getElementById('boardFab');
 
 function render(){
   normalizeState();
   helpFab.style.display = (state.screen==='intro') ? 'none' : 'flex';
+  // 수사 보드 버튼: 감정 시작(튜토리얼 통과) 이후에만 노출
+  boardFab.style.display = (state.screen==='appraise' || state.screen==='result') ? 'flex' : 'none';
   if(state.screen==='intro')   return renderIntro();
   if(state.screen==='tutorial')return renderTutorial();
   if(state.screen==='appraise')return renderAppraise();
   if(state.screen==='result')  return renderResult();
 }
+
+/* ---------- 수사 보드 (진행 시각화) ---------- */
+function boardHtml(){
+  const tut = SPECIMENS.find(s=>s.tutorial);
+  const entries = [];
+  // 튜토리얼 카드(항상 진품·연습). 보드는 튜토리얼 통과 후에만 열림.
+  if(tut) entries.push({sp:tut, isReal:true, verdict:'real', verdictOk:true, tutorial:true});
+  state.results.forEach(r=>{
+    const sp = SPECIMENS.find(s=>s.id===r.id);
+    entries.push({sp, isReal:r.isReal, verdict:r.chosenVerdict, verdictOk:r.verdictOk});
+  });
+  const fakes = entries.filter(e=>!e.isReal);
+  const reals = entries.filter(e=>e.isReal);
+
+  const card = (e)=>{
+    const sp = e.sp;
+    const stampReal = (e.verdict==='real');   // 플레이어가 찍은 도장
+    const stampLabel = stampReal ? '진품' : '위조';
+    const stampCls = stampReal ? 'st-real' : 'st-fake';
+    const trick = (!e.isReal && sp.trick) ? `<div class="bc-trick">🧬 수법 — ${sp.trick}</div>` : '';
+    const vd = e.tutorial
+      ? `<div class="bc-verdict ok">✔ 연습 완료</div>`
+      : (e.verdictOk ? `<div class="bc-verdict ok">✔ 정확히 감정</div>` : `<div class="bc-verdict no">✘ 놓침 — 오판</div>`);
+    return `
+    <div class="board-card ${e.isReal?'bc-real':'bc-fake'}">
+      <span class="pin"></span>
+      <div class="bc-top">
+        <span class="bc-icon">${ICONS[sp.icon]||'🦴'}</span>
+        <span class="bc-name">${e.tutorial?'#0':'#'+sp.id} ${sp.name}</span>
+        <span class="bc-stamp ${stampCls}">${stampLabel}</span>
+      </div>
+      ${trick}
+      <div class="bc-reason">${sp.review||''}</div>
+      ${vd}
+    </div>`;
+  };
+
+  // 위조단 패턴 완성 여부 (이번 판의 위조 표본을 모두 감정했는가)
+  const roundFakeCount = state.order.slice(1).filter(i=>!SPECIMENS[i].isReal).length;
+  const complete = roundFakeCount>0 && fakes.length===roundFakeCount;
+  const trickList = fakes.map(e=>e.sp.trick).filter(Boolean).join(' · ');
+
+  const netInner = fakes.length
+    ? `<div class="board-net">${fakes.map(card).join('')}</div>
+       ${complete?`<div class="board-complete">🕸️ 위조단의 ${roundFakeCount>=3?'세 가지 ':''}수법이 모두 드러났다<div class="bc-tricks">${trickList}</div></div>`:''}`
+    : `<div class="board-empty">아직 드러난 위조 수법이 없습니다. 감정을 진행하세요.</div>`;
+
+  const realInner = reals.length ? reals.map(card).join('')
+    : `<div class="board-empty">아직 정상 판정된 표본이 없습니다.</div>`;
+
+  return `
+  <div class="board">
+    <div class="board-sec">
+      <div class="board-sec-title">🕸️ 위조단 네트워크</div>
+      ${netInner}
+    </div>
+    <div class="board-sec">
+      <div class="board-sec-title">✅ 정상 판정</div>
+      ${realInner}
+    </div>
+  </div>`;
+}
+function openBoard(){
+  document.getElementById('boardBody').innerHTML = boardHtml();
+  document.getElementById('boardModal').classList.add('on');
+  sndFlip();
+}
+function closeBoard(){ document.getElementById('boardModal').classList.remove('on'); }
 
 /* ---------- 감정 신뢰도 게이지 ---------- */
 function trustStatus(t){
@@ -1110,11 +1351,10 @@ function renderTutorial(){
 /* ---------- 본 감정 (#1~#4) ---------- */
 function renderAppraise(){
   const sp = SPECIMENS[state.index];
-  // 본 감정 표본 순서 (전체 5표본 중 튜토리얼 제외 4점)
-  const doneCount = state.results.length;              // 이미 확정한 본감정 수
-  const posNow = sp.id;                                 // 1..4
-  const pct = 8 + (posNow-1)/4*84 + (state.revealed?21:0)/1; // 대략적 진행
-  const pctClamped = Math.min(96, 8 + ((posNow-1)+ (state.revealed?1:0))/4*88);
+  // 본 감정 진행 위치 (order 기준: pos 1..ROUND_SIZE). 셔플되어도 순서대로 1/4,2/4…
+  const roundN = state.order.length - 1;                // 본감정 표본 수
+  const posNow = state.pos;                             // 1..roundN
+  const pctClamped = Math.min(96, 8 + ((posNow-1)+ (state.revealed?1:0))/roundN*88);
 
   // 하단 판정부 구성
   let panel = '';
@@ -1156,7 +1396,7 @@ function renderAppraise(){
       ? sp.feedbackOk
       : sp.feedbackNo;
     const earn = `+${r.points}점 획득 (${r.verdictOk? (r.reasonOk?'만점':'부분점수'):'0점'})`;
-    const isLast = (state.index >= SPECIMENS.length-1);
+    const isLast = (state.pos >= state.order.length-1);
     // 위조 표본의 정답 해설 끝에 위조단 수법 한 줄 (진품 표본에는 없음)
     const syndicateHtml = sp.syndicate
       ? `<div class="syndicate"><span class="sy-ic">🕵️</span><span><b>위조단의 흔적</b> — ${sp.syndicate}</span></div>`
@@ -1190,7 +1430,7 @@ function renderAppraise(){
     : '';
 
   app.innerHTML = `
-  ${topbar('감정 '+posNow+'/4', '위조를 찾아라', pctClamped)}
+  ${topbar('감정 '+posNow+'/'+roundN, '위조를 찾아라', pctClamped)}
   ${trustBar()}
   ${warnHtml}
   <div class="folder card">
@@ -1203,14 +1443,11 @@ function renderAppraise(){
 /* ---------- 결과 리포트 ---------- */
 function renderResult(){
   const total = state.results.reduce((s,r)=>s+r.points,0);
-  const maxTotal = SPECIMENS.filter(s=>!s.tutorial).length * PT_FULL; // 4 * 25 = 100
-  const correctCount = state.results.filter(r=>r.verdictOk).length + 1; // +튜토리얼(항상 진품 학습완료)
-  // 등급은 전체 5표본 정답 기준 (튜토리얼 진품 포함)
+  const roundN = state.results.length || 1;
+  const maxTotal = roundN * PT_FULL;                // ROUND_SIZE × 25
   const verdictCorrect = state.results.filter(r=>r.verdictOk).length;
-  const totalSpecimens = 5;
-  const gradeCount = verdictCorrect + 1; // 튜토리얼 1점 자동 포함
-  const g = gradeFor(gradeCount);
-  const acc = Math.round(total/maxTotal*100);
+  const acc = maxTotal ? Math.round(total/maxTotal*100) : 0;
+  const E = decideEnding();                          // 정확도+신뢰도 종합 엔딩
 
   const reviews = state.results.map((r,i)=>{
     const sp = SPECIMENS.find(s=>s.id===r.id);
@@ -1239,12 +1476,21 @@ function renderResult(){
   <div class="folder card">
     <div class="result-hero">
       <div class="hand" style="font-size:1.4rem;color:var(--stamp)">감정 리포트</div>
-      <div class="grade">${g.emoji} ${g.title}</div>
+      <div class="ending-emblem ${E.tone}">
+        <div class="ee-emoji">${E.emoji}</div>
+        <div class="ee-title">${E.title}</div>
+        <div class="ee-sub">${E.sub}</div>
+      </div>
       <div class="score-big">${total}<span style="font-size:1.4rem"> / ${maxTotal}점</span></div>
-      <div class="score-sub">진위 판정 정확도 ${verdictCorrect}/4 · 종합 정확도 ${acc}%</div>
+      <div class="score-sub">진위 판정 정확도 ${verdictCorrect}/${roundN} · 종합 정확도 ${acc}%</div>
       <div class="score-sub">감정 신뢰도 <b>${state.trust}</b> · ${trustStatus(state.trust).label}</div>
-      <p class="muted" style="font-size:.95rem;margin:10px 4px 0">${g.desc}</p>
     </div>
+
+    <div class="section-label">🗝️ 한 선생의 엔딩</div>
+    ${mentorBox(E.mentor,'ending')}
+
+    <div class="section-label">🕵️ 수사 보드</div>
+    ${boardHtml()}
 
     <div class="section-label">📑 표본별 감정 리뷰</div>
     ${reviews}
@@ -1252,10 +1498,8 @@ function renderResult(){
     <div class="section-label">📚 개념 한 줄 정리</div>
     <div class="concept-grid">${concepts}</div>
 
-    <div class="section-label">🗝️ 한 선생의 마지막 말</div>
-    ${mentorBox(endingFor(gradeCount),'ending')}
-
     <button class="btn primary" style="margin-top:20px" onclick="restart()">🔄 다시 감정하기</button>
+    <p class="muted center" style="font-size:.85rem;margin-top:8px">다시 시작하면 표본 순서가 새로 섞입니다.</p>
   </div>`;
 }
 
@@ -1264,7 +1508,9 @@ function renderResult(){
    ============================================================ */
 
 function startGame(){
-  state = {screen:'tutorial', index:0, tutStep:0, verdict:null, reasonSel:null, revealed:false,
+  const order = buildOrder();
+  state = {screen:'tutorial', order:order, pos:0, index:order[0], tutStep:0,
+           verdict:null, reasonSel:null, revealed:false,
            trust:100, magnify:false, inspected:[], results:[]};
   sndFlip(); saveState(); render(); scrollTop();
 }
@@ -1276,7 +1522,8 @@ function nextTutStep(){
 
 function finishTutorial(){
   state.screen='appraise';
-  state.index=1;              // 첫 본감정 표본 #1
+  state.pos=1;                       // order[1] = 첫 본감정 표본 (셔플됨)
+  state.index=state.order[state.pos];
   state.verdict=null; state.reasonSel=null; state.revealed=false;
   state.magnify=false; state.inspected=[];   // 표본마다 돋보기 초기화
   sndFlip(); saveState(); render(); scrollTop();
@@ -1332,12 +1579,13 @@ function confirmAppraisal(){
 
 function nextSpecimen(){
   sndFlip();
-  if(state.index >= SPECIMENS.length-1){
+  if(state.pos >= state.order.length-1){   // 마지막 표본까지 끝 → 결과
     state.screen='result';
     saveState(); render(); scrollTop();
     return;
   }
-  state.index++;
+  state.pos++;
+  state.index=state.order[state.pos];
   state.verdict=null; state.reasonSel=null; state.revealed=false;
   state.magnify=false; state.inspected=[];   // 새 표본 → 돋보기 초기화
   saveState(); render(); scrollTop();
