@@ -179,10 +179,37 @@ button{font-family:inherit;cursor:pointer;border:none;}
 }
 .field:last-child{border-bottom:none;}
 .field .k{
-  flex:0 0 92px;font-weight:700;color:var(--ink-soft);font-size:.92rem;
-  display:flex;align-items:center;gap:6px;
+  flex:0 0 100px;font-weight:700;color:var(--ink-soft);font-size:.92rem;
+  display:flex;align-items:center;gap:5px;flex-wrap:wrap;
 }
 .field .v{flex:1;font-size:1rem;}
+
+/* ---------- 항목 설명 툴팁(물음표) ---------- */
+.hint-wrap{position:relative;display:inline-flex;cursor:pointer;outline:none;}
+.hint-ic{
+  width:16px;height:16px;flex:0 0 16px;border-radius:50%;
+  background:var(--ink-soft);color:var(--paper);
+  font-size:.72rem;font-weight:700;line-height:16px;text-align:center;
+}
+.hint-wrap:hover .hint-ic,.hint-wrap.show .hint-ic{background:var(--stamp);}
+.hint-tip{
+  position:absolute;left:0;top:calc(100% + 9px);z-index:30;
+  width:220px;max-width:66vw;
+  background:var(--ink);color:var(--paper);
+  font-size:.82rem;font-weight:400;line-height:1.45;
+  padding:9px 12px;border-radius:8px;
+  box-shadow:0 8px 18px var(--shadow);
+  opacity:0;visibility:hidden;transform:translateY(-4px);
+  transition:opacity .15s, transform .15s, visibility .15s;
+  pointer-events:none;
+}
+.hint-tip::before{
+  content:"";position:absolute;bottom:100%;left:14px;
+  border:6px solid transparent;border-bottom-color:var(--ink);
+}
+.hint-wrap:hover .hint-tip,
+.hint-wrap:focus .hint-tip,
+.hint-wrap.show .hint-tip{opacity:1;visibility:visible;transform:none;}
 .field.claim{
   background:rgba(182,54,44,.06);border-radius:8px;border-bottom:none;margin-top:8px;
 }
@@ -418,6 +445,11 @@ const ICONS = {
   none: '—'
 };
 
+// 감정 서류 항목 라벨에 붙는 한 줄 설명(툴팁). 라벨명으로 조회.
+const FIELD_HINTS = {
+  '퇴적 당시 환경': '이 지층이 퇴적될 당시(=화석 속 생물이 살던 시기)의 환경'
+};
+
 // 배점
 const PT_FULL = 25;   // 진위 O + 근거 O
 const PT_PART = 15;   // 진위 O + 근거 X
@@ -433,7 +465,7 @@ const SPECIMENS = [
     fields:[
       {k:'발굴 지층', v:'고생대 지층', icon:'📍'},
       {k:'같은 지층에서 발견된 화석', v:'방추충', icon:ICONS.fusulinid},
-      {k:'산지 환경', v:'따뜻하고 얕은 바다로 추정', icon:'🌊'},
+      {k:'퇴적 당시 환경', v:'따뜻하고 얕은 바다로 추정', icon:'🌊'},
     ],
     claim:'"고생대 표준 화석입니다."',
     isReal:true,
@@ -454,7 +486,7 @@ const SPECIMENS = [
     fields:[
       {k:'발굴 지층', v:'중생대 지층', icon:'📍'},
       {k:'같은 지층에서 발견된 화석', v:'화폐석', icon:ICONS.nummulite},
-      {k:'산지 환경', v:'육지', icon:'🏞️'},
+      {k:'퇴적 당시 환경', v:'육지', icon:'🏞️'},
     ],
     claim:'"중생대를 대표하는 완벽한 표본입니다."',
     isReal:false,
@@ -476,7 +508,7 @@ const SPECIMENS = [
     fields:[
       {k:'발굴 지층', v:'같은 표본 덩어리에서 채취', icon:'📍'},
       {k:'같은 지층에서 발견된 화석', v:'고사리', icon:ICONS.fern},
-      {k:'산지 환경', v:'"따뜻하고 수심이 얕은 바다"라고 기재됨', icon:'🌊'},
+      {k:'퇴적 당시 환경', v:'"따뜻하고 수심이 얕은 바다"라고 기재됨', icon:'🌊'},
     ],
     claim:'"바다 환경을 그대로 보여주는 귀한 표본입니다."',
     isReal:false,
@@ -499,7 +531,7 @@ const SPECIMENS = [
     fields:[
       {k:'발굴 장소', v:'히말라야산맥 고지대 (해발 5,000 m 부근)', icon:'⛰️'},
       {k:'같은 지층에서 발견된 화석', v:'없음', icon:'—'},
-      {k:'산지 환경', v:'과거 바다', icon:'🌊'},
+      {k:'퇴적 당시 환경', v:'과거 바다', icon:'🌊'},
     ],
     claim:'제보자의 의심: "바다 생물이 어떻게 이렇게 높은 산에서 나오나? 명백한 위조다."',
     claimIsTip:true,
@@ -521,7 +553,7 @@ const SPECIMENS = [
     icon:'fusulinid',
     fields:[
       {k:'발굴 지층', v:'고생대 지층', icon:'📍'},
-      {k:'산지 환경', v:'바다', icon:'🌊'},
+      {k:'퇴적 당시 환경', v:'바다', icon:'🌊'},
     ],
     claim:'"이 방추충은 오직 이 좁은 지역에서만 드물게 발견되기 때문에, 시대를 콕 집어주는 완벽한 표준화석입니다."',
     isReal:false,
@@ -617,7 +649,7 @@ function renderIntro(){
     <div class="brief">
       <p class="lead">당신은 화석 <b>감정사</b>입니다.</p>
       <p>곧 경매에 오를 화석 컬렉션이 도착했습니다. 그런데 <b>그중 위조품이 섞여 있다</b>는 제보가 들어왔습니다.</p>
-      <p>각 표본에 붙은 감정 서류 — <b>발굴 지층·같은 지층에서 발견된 화석·산지 환경·판매자 주장</b> — 을 읽고, 교과 개념(<b>표준화석·시상화석·융기</b>)으로 진품과 위조품을 가려내세요.</p>
+      <p>각 표본에 붙은 감정 서류 — <b>발굴 지층·같은 지층에서 발견된 화석·퇴적 당시 환경·판매자 주장</b> — 을 읽고, 교과 개념(<b>표준화석·시상화석·융기</b>)으로 진품과 위조품을 가려내세요.</p>
       <p class="center hand" style="font-size:1.6rem;color:var(--stamp);margin-top:14px">
         경매 출품 화석 5점 중 위조품이 있다.<br>당신의 감정을 시작하라.
       </p>
@@ -639,11 +671,19 @@ function renderIntro(){
 function docCard(sp, extra=''){
   const num = sp.tutorial ? '#0' : '#'+sp.id;
   const emoji = ICONS[sp.icon] || '🦴';
-  let fieldsHtml = sp.fields.map(f=>`
+  let fieldsHtml = sp.fields.map(f=>{
+    const hint = FIELD_HINTS[f.k];
+    const hintHtml = hint
+      ? `<span class="hint-wrap" onclick="toggleHint(event,this)" tabindex="0" aria-label="${hint}">
+           <span class="hint-ic">?</span><span class="hint-tip">${hint}</span>
+         </span>`
+      : '';
+    return `
     <div class="field">
-      <div class="k">${f.icon?`<span>${f.icon}</span>`:''}${f.k}</div>
+      <div class="k">${f.icon?`<span>${f.icon}</span>`:''}<span class="k-label">${f.k}</span>${hintHtml}</div>
       <div class="v">${f.v}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   // 판매자 주장 / 제보
   const claimClass = sp.claimIsTip ? 'field claim tip' : 'field claim';
   const claimKey = sp.claimIsTip ? '⚠️ 제보' : '💬 판매자';
@@ -915,6 +955,18 @@ function playStamp(isReal){
     mark.classList.remove('go');
   }, 950);
 }
+
+/* ---------- 항목 설명 툴팁 (모바일 탭 토글) ---------- */
+function toggleHint(e, el){
+  e.stopPropagation();
+  const willShow = !el.classList.contains('show');
+  document.querySelectorAll('.hint-wrap.show').forEach(x=>x.classList.remove('show'));
+  if(willShow) el.classList.add('show');
+}
+// 다른 곳을 탭하면 열린 툴팁 닫기
+document.addEventListener('click', ()=>{
+  document.querySelectorAll('.hint-wrap.show').forEach(x=>x.classList.remove('show'));
+});
 
 /* ---------- 규칙 모달 ---------- */
 function openRules(){ document.getElementById('rulesModal').classList.add('on'); }
